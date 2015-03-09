@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">EventManager</string>
+    <string name="title_section1">Todays Events</string>
+    <string name="title_section2">Weekly Events view</string>
+    <string name="title_section3">Monthly Event View<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">EventManager</string>
+    <string name="title_section1">Today's Events</string>
+    <string name="title_section2">This Week Events</string>
+    <string name="title_section3">Section 3</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="action_example">Example action</string>
+    <string name="action_settings">Settings</string>
+
+</resources>
+        <?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">EventManager</string>
+    <string name="title_section1">Today's Events</string>
+    <string name="title_section2">This Week Events</string>
+    <string name="title_section3">Section 3</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="action_example">Example action</string>
+    <string name="action_settings">Settings</string>
+
+</resources>
+        </string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="action_example">Example action</string>
+    <string name="action_settings">Settings</string>
+
+</resources>

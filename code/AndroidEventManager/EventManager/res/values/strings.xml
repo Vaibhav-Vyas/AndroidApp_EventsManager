@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">EventManager</string>
+    <string name="title_section1">Today\'s Events</string>
+    <string name="title_section2">Weekly Events view</string>
+    <string name="title_section3">Monthly Event View</string>
+    <string name="title_section4">Add Event</string>
+    <string name="title_section5">Events Accepted</string>
+    <string name="title_section6">Events I might attend</string>
+    <string name="title_section7">Events denied</string>
+    <string name="title_section8">Facebook Auth.(retrieve contacts)</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="action_add">(+) Add Events</string>
+    <string name="action_search">Search Events</string>
+    <string name="action_settings">Settings</string>
+    <string name="action_about_us">About Us</string>
+    <string name="action_rate_app">Rate App</string>
+    
+
+</resources>
