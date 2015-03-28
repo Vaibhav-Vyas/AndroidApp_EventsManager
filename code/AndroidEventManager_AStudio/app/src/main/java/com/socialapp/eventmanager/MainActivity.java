@@ -1,6 +1,7 @@
 package com.socialapp.eventmanager;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
@@ -116,6 +117,10 @@ public class MainActivity extends ActionBarActivity
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
+        }
+        else if(id == R.id.action_add)  {
+            Intent intent = new Intent(this, CreateEventActivity.class);
+            startActivity(intent);
         }
 
         return super.onOptionsItemSelected(item);
