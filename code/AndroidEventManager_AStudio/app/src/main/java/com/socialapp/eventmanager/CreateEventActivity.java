@@ -2,6 +2,8 @@ package com.socialapp.eventmanager;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -172,8 +174,16 @@ public class CreateEventActivity extends FragmentActivity {
                 event.end_time = end.getTimeInMillis() / 1000;
 
 
-                event.save();
+                // Owner
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                event.owner= prefs.getString("email", null);
 
+                if((event.name).matches("")){
+                    Toast.makeText(this, "Please insert a name for the event", Toast.LENGTH_SHORT).show();
+                }else{
+                    event.save();
+                    super.onBackPressed();
+                }
 
                 break;
         }
