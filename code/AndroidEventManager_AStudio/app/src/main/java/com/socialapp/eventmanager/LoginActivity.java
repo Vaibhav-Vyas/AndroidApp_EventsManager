@@ -79,7 +79,7 @@ public class LoginActivity extends FragmentActivity {
                         manager.popBackStack();
                     }
                     if (currentAccessToken != null) {
-                       // showFragment(SELECTION, false);
+                        // showFragment(SELECTION, false);
                     } else {
                         showFragment(SPLASH, false);
                     }
@@ -95,9 +95,9 @@ public class LoginActivity extends FragmentActivity {
 
 
         FragmentTransaction transaction = fm.beginTransaction();
-       // for(int i = 0; i < fragments.length; i++) {
-            transaction.hide(fragments[0]);
-       // }
+        // for(int i = 0; i < fragments.length; i++) {
+        transaction.hide(fragments[0]);
+        // }
         transaction.commit();
 
         splashFragment.setSkipLoginCallback(new SplashFragment.SkipLoginCallback() {

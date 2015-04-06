@@ -24,12 +24,24 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
-    android:background="#F0F8FF" >
+    android:background="#ffff660c" >
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/appNameBanner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="\n\t    Android \nEvent Manager"
+            android:textSize="32sp"
+            android:textColor="#000000"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:layout_marginBottom="30dp" />
 
 
         <com.facebook.login.widget.LoginButton
@@ -45,12 +57,24 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="Skipped Login"
+            android:text="Skip Login"
             android:textSize="12sp"
-            android:textColor="#EAFEA7"
+            android:textColor="#000000"
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
             android:layout_marginBottom="30dp" />
+
+        <TextView
+            android:id="@+id/welcomeMsg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="Sign-in using local account or facebook account"
+            android:ems="10"
+            android:textColor="#ff999999"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp" />
+
 
     </LinearLayout>
 </ScrollView>

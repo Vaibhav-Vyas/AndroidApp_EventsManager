@@ -21,7 +21,9 @@
 package com.socialapp.eventmanager;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,11 +31,15 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
+import com.facebook.Profile;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+
+import java.util.Arrays;
 
 public class SplashFragment extends Fragment {
 
@@ -52,22 +58,40 @@ public class SplashFragment extends Fragment {
 
         callbackManager = CallbackManager.Factory.create();
         loginButton = (LoginButton) view.findViewById(R.id.login_button);
+        //loginButton.setReadPermissions(Arrays.asList("user_friends, public_profile, email, user_birthday"));
         loginButton.setReadPermissions("user_friends");
         loginButton.setFragment(this);
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-                Toast.makeText(getActivity(), "Login successful", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Facebook Login successful", Toast.LENGTH_SHORT).show();
+                AccessToken accessToken = loginResult.getAccessToken();
+                Profile profile = Profile.getCurrentProfile();
+                //TextView welcomeMsg = (TextView) findViewById(R.id.welcomeMsg);
+                //welcomeMsg.setText(constructWelcomeMessage(profile));
+
+                if (null != profile)
+                {
+                    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
+                    SharedPreferences.Editor editor = prefs.edit();
+                    //editor.putString("id", profile.getId());
+                    editor.putString("fbFirstName", profile.getFirstName());
+                    editor.putString("fbLastName", profile.getLastName());
+                    editor.commit();
+                }
+                Intent intent = new Intent(getActivity().getApplicationContext(), MainActivity.class);
+                startActivity(intent);
+
             }
 
             @Override
             public void onCancel() {
-                Toast.makeText(getActivity(), "Login canceled", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Facebook Login canceled", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onError(FacebookException exception) {
-                Toast.makeText(getActivity(), "Login error", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Facebook Login error", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -94,5 +118,12 @@ public class SplashFragment extends Fragment {
         skipLoginCallback = callback;
     }
 
+    private String constructWelcomeMessage(Profile profile) {
+        StringBuffer stringBuffer = new StringBuffer();
+        if (profile != null) {
+            stringBuffer.append("Facebook Login successful. Welcome " + profile.getName());
+        }
+        return stringBuffer.toString();
+    }
 }
 
