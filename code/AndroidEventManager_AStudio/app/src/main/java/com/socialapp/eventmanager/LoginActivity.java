@@ -29,6 +29,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -36,10 +37,18 @@ import android.widget.Toast;
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
 import com.facebook.FacebookSdk;
+import com.facebook.GraphRequest;
+import com.facebook.GraphRequestBatch;
+import com.facebook.GraphResponse;
 import com.facebook.appevents.AppEventsLogger;
 import com.facebook.CallbackManager;
 import com.socialapp.eventmanager.R;
 import com.socialapp.eventmanager.SplashFragment;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.List;
 
 public class LoginActivity extends FragmentActivity {
 
@@ -72,6 +81,42 @@ public class LoginActivity extends FragmentActivity {
             @Override
             protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken,
                                                        AccessToken currentAccessToken) {
+
+
+                JSONArray friendsIDarray = new JSONArray();
+                JSONObject user_friend_list;
+
+                GraphRequestBatch batch = new GraphRequestBatch(
+                        GraphRequest.newMeRequest(
+                                currentAccessToken,
+                                new GraphRequest.GraphJSONObjectCallback() {
+                                    @Override
+                                    public void onCompleted(
+                                            JSONObject jsonObject,
+                                            GraphResponse response) {
+                                        Log.i("Info Msg:", "Response = ." + response.toString());
+                                    }
+                                }),
+                        GraphRequest.newMyFriendsRequest(
+                                currentAccessToken,
+                                new GraphRequest.GraphJSONArrayCallback() {
+                                    @Override
+                                    public void onCompleted(
+                                            JSONArray jsonArray,
+                                            GraphResponse response) {
+                                        // Application code for users friends
+                                    }
+                                })
+                );
+                batch.addCallback(new GraphRequestBatch.Callback() {
+                    @Override
+                    public void onBatchCompleted(GraphRequestBatch graphRequests) {
+                        // Application code for when the batch finishes
+                    }
+                });
+                batch.executeAsync();
+
+
                 if (isResumed) {
                     FragmentManager manager = getSupportFragmentManager();
                     int backStackSize = manager.getBackStackEntryCount();
@@ -107,7 +152,35 @@ public class LoginActivity extends FragmentActivity {
                 //showFragment(SELECTION, false);
             }
         });
+
+        accessTokenTracker.startTracking();
     }
+
+/*
+    private void onSessionStateChange(Session session, SessionState state,
+                                      Exception exception) {
+        if (state.isOpened()) {
+            Log.i(TAG, "Logged in...");
+            Request.executeMyFriendsRequestAsync(session,
+                    new GraphUserListCallback() {
+
+                        @Override
+                        public void onCompleted(List<GraphUser> users,
+                                                Response response) {
+                            Log.i("Response JSON", response.toString());
+                            names = new String[users.size()];
+                            id = new String[users.size()];
+                            for (int i=0; i<users.size();i++){
+                                names[i] = users.get(i).getName();
+                                id[i]= users.get(i).getId();
+                            }
+                        }
+                    });
+        } else if (state.isClosed()) {
+            Log.i(TAG, "Logged out...");
+        }
+    }
+*/
 
     public void login(View view){
         EditText emailView = (EditText)findViewById(R.id.email);

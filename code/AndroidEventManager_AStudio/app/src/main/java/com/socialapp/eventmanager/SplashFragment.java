@@ -25,6 +25,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,9 +36,15 @@ import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
+import com.facebook.GraphRequest;
+import com.facebook.GraphRequestBatch;
+import com.facebook.GraphResponse;
 import com.facebook.Profile;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.Arrays;
 
@@ -69,6 +76,98 @@ public class SplashFragment extends Fragment {
                 Profile profile = Profile.getCurrentProfile();
                 //TextView welcomeMsg = (TextView) findViewById(R.id.welcomeMsg);
                 //welcomeMsg.setText(constructWelcomeMessage(profile));
+
+
+
+
+                // Using Facebook API for getting User details as well as 
+                // friends that are using this app.
+                JSONArray friendsIDarray = new JSONArray();
+                JSONObject user_friend_list;
+
+                GraphRequestBatch batch = new GraphRequestBatch(
+                        GraphRequest.newMeRequest(
+                                accessToken,
+                                new GraphRequest.GraphJSONObjectCallback() {
+                                    @Override
+                                    public void onCompleted(
+                                            JSONObject jsonObject,
+                                            GraphResponse response) {
+                                        Log.i("Info Msg:", "Response = ." + response.toString());
+
+                                        try {
+                                            Log.i("Info Msg:", "Logged in Users FB id = ." + jsonObject.getString("id"));
+                                            Log.i("Info Msg:", "Logged in Users FB name = ." + jsonObject.getString("name"));
+                                        }
+                                        catch (Exception e)
+                                        {
+                                        }
+/*
+                                        if (response) {
+                                            // handle the result
+                                            Log.i("Info Msg:", "Response = ." + response.toString());
+
+
+                                            for(int i=0; i<response.getJSONArray().length(); i++)
+                                            {
+
+                                                JSONObject data = response.getJSONObject(i);
+                                                friendsIDarray.push(data[i].id);
+                                            }
+                                            user_friend_list = friendsIDarray.join();
+
+                                        }
+*/
+                                       
+                                    }
+                                }),
+                        // FB API for getting users friends that are using this app.
+                        GraphRequest.newMyFriendsRequest(
+                                accessToken,
+                                new GraphRequest.GraphJSONArrayCallback() {
+                                    @Override
+                                    public void onCompleted(
+                                            JSONArray jsonArray,
+                                            GraphResponse response) {
+
+                                        try {
+                                            for (int i = 0; i < jsonArray.length(); i++) {
+                                                Log.i("Info Msg:", "id = ." + jsonArray.getJSONObject(i).getString("id"));
+                                                Log.i("Info Msg:", "name = ." + jsonArray.getJSONObject(i).getString("name"));
+
+                                            }
+
+                                            Log.i("Info Msg:", "Response = ." + response.toString());
+                                        }
+                                        catch (Exception e)
+                                        {
+
+                                        }
+
+                                    }
+                                })
+                );
+                batch.addCallback(new GraphRequestBatch.Callback() {
+                    @Override
+                    public void onBatchCompleted(GraphRequestBatch graphRequests) {
+                        // Application code for when the batch finishes
+                    }
+                });
+                batch.executeAsync();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
                 if (null != profile)
                 {
