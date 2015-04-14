@@ -20,6 +20,8 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.socialapp.eventmanager.Models.Event;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
 
@@ -31,6 +33,12 @@ public class MainFragment extends Fragment {
      * The fragment argument representing the section number for this
      * fragment.
      */
+
+    private LayoutInflater layout_inflater;
+    private int section_number;
+
+
+
     private static final String ARG_SECTION_NUMBER = "section_number";
     View rootView;
     /**
@@ -51,13 +59,60 @@ public class MainFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        layout_inflater = inflater;
         rootView = inflater.inflate(R.layout.fragment_main, container, false);
         TextView tv = (TextView)rootView.findViewById(R.id.heading);
         tv.setText("Fragment Number : " + getArguments().getInt(ARG_SECTION_NUMBER));
+        section_number = getArguments().getInt(ARG_SECTION_NUMBER);
 
+        /*
         final LinearLayout eventContainer = (LinearLayout) rootView.findViewById(R.id.eventContainer);
 
-        final List<Event> events = Event.findWithQuery(Event.class, "Select * from Event");
+        //final List<Event> events = Event.findWithQuery(Event.class, "Select * from Event ORDER BY startTime");
+        //final List<Event> events = Event.find(Event.class, "startTime > 0", null, null, "startTime",null);
+
+        ////////////////////////////////////////////////////////////////////////////////////
+        final List<Event> events;
+
+        Calendar calendar1 = Calendar.getInstance();
+        long current_time = calendar1.getTimeInMillis()/1000;
+        String[] queryargs;
+
+        //Log.d("Sujith", "current time string = " + queryargs[0]);
+
+
+        switch (section_number){
+            case 1: // Today
+                queryargs = new String[2];
+                queryargs[0]= getTimeAfterDays(0);
+                queryargs[1]= getTimeAfterDays(1);
+                events = Event.find(Event.class, "startTime BETWEEN ? AND ?", queryargs, null, "startTime",null);
+                break;
+            case 2: // This week
+                queryargs = new String[2];
+                queryargs[0]=getTimeAfterDays(0);
+                queryargs[1]=getTimeAfterDays(7);
+                events = Event.find(Event.class, "startTime BETWEEN ? AND ?", queryargs, null, "startTime",null);
+                break;
+            case 3: // This month
+                queryargs = new String[2];
+                queryargs[0]=getTimeAfterDays(0);
+                queryargs[1]=getTimeAfterDays(30);
+                events = Event.find(Event.class, "startTime BETWEEN ? AND ?", queryargs, null, "startTime",null);
+                break;
+            case 4: // UW
+                events = Event.find(Event.class, "organization = UW", null, null, "startTime",null);
+                break;
+            default: // All events
+                events = Event.find(Event.class, "startTime > 0", null, null, "startTime",null);
+                break;
+        }
+
+        ///////////////////////////////////////////////////////////////////////////////////////
+
+
+
 
         for (int i = 0; i < events.size(); i++) {
             Event currEvent = events.get(i);
@@ -79,8 +134,102 @@ public class MainFragment extends Fragment {
                 }
             });
 
+            Random rnd = new Random();
+            int color = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
+
+            View view = eventItem.findViewById(R.id.tempRel);
+            view.setBackgroundColor(color);
 
 
+            TextView eventNameText = (TextView) eventItem.findViewById(R.id.eventName);
+            eventNameText.setText(currEvent.name);
+
+            TextView eventLocationText =
+                    (TextView) eventItem.findViewById(R.id.textview1);
+            eventLocationText.setText(currEvent.location);
+
+            ImageView iv= (ImageView)eventItem.findViewById(R.id.eventImage);
+            iv.setImageResource(R.drawable.event_pic);
+
+            eventContainer.addView(eventItem);
+        }
+        */
+        return rootView;
+    }
+
+
+    @Override
+    public void onResume(){
+        super.onResume();
+
+        final LinearLayout eventContainer = (LinearLayout) rootView.findViewById(R.id.eventContainer);
+        eventContainer.removeAllViews();
+
+        //final List<Event> events = Event.findWithQuery(Event.class, "Select * from Event ORDER BY startTime");
+        //final List<Event> events = Event.find(Event.class, "startTime > 0", null, null, "startTime",null);
+
+        ////////////////////////////////////////////////////////////////////////////////////
+        final List<Event> events;
+
+        Calendar calendar1 = Calendar.getInstance();
+        long current_time = calendar1.getTimeInMillis()/1000;
+        String[] queryargs;
+
+        //Log.d("Sujith", "current time string = " + queryargs[0]);
+
+
+        switch (section_number){
+            case 1: // Today
+                queryargs = new String[2];
+                queryargs[0]= getTimeAfterDays(0);
+                queryargs[1]= getTimeAfterDays(1);
+                events = Event.find(Event.class, "startTime BETWEEN ? AND ?", queryargs, null, "startTime",null);
+                break;
+            case 2: // This week
+                queryargs = new String[2];
+                queryargs[0]=getTimeAfterDays(0);
+                queryargs[1]=getTimeAfterDays(7);
+                events = Event.find(Event.class, "startTime BETWEEN ? AND ?", queryargs, null, "startTime",null);
+                break;
+            case 3: // This month
+                queryargs = new String[2];
+                queryargs[0]=getTimeAfterDays(0);
+                queryargs[1]=getTimeAfterDays(30);
+                events = Event.find(Event.class, "startTime BETWEEN ? AND ?", queryargs, null, "startTime",null);
+                break;
+            case 4: // UW
+               // events = Event.find(Event.class, "organization = UW", null, null, "startTime",null);
+                events = Event.find(Event.class, "startTime > 0", null, null, "startTime",null);
+                break;
+            default: // All events
+                events = Event.find(Event.class, "startTime > 0", null, null, "startTime",null);
+                break;
+        }
+
+        ///////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+        for (int i = 0; i < events.size(); i++) {
+            Event currEvent = events.get(i);
+            View eventItem = layout_inflater.inflate(R.layout.event_item, null);
+
+            eventItem.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View v) {
+                    int index=((ViewGroup)v.getParent()).indexOfChild(v);
+                    Event selectedEvent=events.get(index);
+
+                    Gson gson=new Gson();
+                    String eventJSON=gson.toJson(selectedEvent,Event.class);
+
+                    Intent newActivity=new Intent(getActivity(),DisplayEventActivity.class);
+                    newActivity.putExtra("event",eventJSON);
+                    startActivity(newActivity);
+
+                }
+            });
 
             Random rnd = new Random();
             int color = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
@@ -102,8 +251,8 @@ public class MainFragment extends Fragment {
             eventContainer.addView(eventItem);
         }
 
-        return rootView;
     }
+
 
     @Override
     public void onStart() {
@@ -118,4 +267,14 @@ public class MainFragment extends Fragment {
         ((MainActivity) activity).onSectionAttached(
                 getArguments().getInt(ARG_SECTION_NUMBER));
     }
+
+
+    public static String getTimeAfterDays(int days) {
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DAY_OF_YEAR, days);
+        return String.valueOf(cal.getTimeInMillis()/1000);
+    }
+
+
+
 }

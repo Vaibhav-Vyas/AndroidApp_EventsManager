@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,7 +30,7 @@ public class CreateEventActivity extends FragmentActivity {
     private Button endDate;
     private Button startTime;
     private Button endTime;
-
+    private static final String TAG = "Sujith";
 
     private Switch public_private_switch;
     private Switch invitation_allowed_switch;
@@ -181,7 +182,53 @@ public class CreateEventActivity extends FragmentActivity {
                 if((event.name).matches("")){
                     Toast.makeText(this, "Please insert a name for the event", Toast.LENGTH_SHORT).show();
                 }else{
+
                     event.save();
+
+
+                    //////////////////////////////////
+                    /// Send to Server //////////////
+                    //////////////////////////////////
+
+                    Backend.createEvent(event, new Backend.CreateEventCallback() {
+                        @Override
+                        public void onRequestCompleted(final String result) {
+
+                            //Log.d(TAG, "Login success. User: " + user.toString());
+
+                            runOnUiThread(new Runnable() {
+                                public void run() {
+                                    Toast.makeText(getApplicationContext(), result, Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+
+                        @Override
+                        public void onRequestFailed(final String message) {
+
+                            //NOTE: parameter validation and filtering is handled by the backend, just show the
+                            //returned error message to the user
+                            Log.d(TAG, "Received error from Backend: " + message);
+                            runOnUiThread(new Runnable() {
+                                public void run() {
+                                    Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+                    });
+
+
+
+
+
+
+
+
+
+
+
+
+
                     super.onBackPressed();
                 }
 

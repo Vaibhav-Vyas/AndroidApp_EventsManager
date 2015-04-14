@@ -46,9 +46,12 @@ import com.socialapp.eventmanager.Models.User;
 import com.socialapp.eventmanager.R;
 import com.socialapp.eventmanager.SplashFragment;
 
+<<<<<<< Updated upstream
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+=======
+>>>>>>> Stashed changes
 import java.util.List;
 
 public class LoginActivity extends FragmentActivity {
