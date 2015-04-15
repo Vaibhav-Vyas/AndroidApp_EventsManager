@@ -34,7 +34,9 @@
         android:layout_width="match_parent"
         android:id="@+id/email"
         android:hint="Email"
-        android:maxLines="1">
+        android:inputType="textEmailAddress"
+        android:maxLines="1"
+        android:imeOptions="actionDone">
     </EditText>
 
     <EditText
@@ -44,7 +46,8 @@
         android:layout_width="match_parent"
         android:id="@+id/password"
         android:hint="password"
-        android:maxLines="1">
+        android:maxLines="1"
+        android:inputType="">
     </EditText>
 
 

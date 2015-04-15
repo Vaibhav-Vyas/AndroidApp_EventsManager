@@ -6,8 +6,10 @@ package com.socialapp.eventmanager;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -176,26 +178,30 @@ public class MainFragment extends Fragment {
         String[] queryargs;
 
         //Log.d("Sujith", "current time string = " + queryargs[0]);
-
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this.getActivity());
+        String owner= prefs.getString("email", null);
 
         switch (section_number){
             case 1: // Today
-                queryargs = new String[2];
+                queryargs = new String[3];
                 queryargs[0]= getTimeAfterDays(0);
                 queryargs[1]= getTimeAfterDays(1);
-                events = Event.find(Event.class, "startTime BETWEEN ? AND ?", queryargs, null, "startTime",null);
+                queryargs[2] = owner;
+                events = Event.find(Event.class, "startTime BETWEEN ? AND ? and owner = ?", queryargs, null, "startTime",null);
                 break;
             case 2: // This week
-                queryargs = new String[2];
-                queryargs[0]=getTimeAfterDays(0);
+                queryargs = new String[3];
+                queryargs[0]=getTimeAfterDays(1);
                 queryargs[1]=getTimeAfterDays(7);
-                events = Event.find(Event.class, "startTime BETWEEN ? AND ?", queryargs, null, "startTime",null);
+                queryargs[2] = owner;
+                events = Event.find(Event.class, "startTime BETWEEN ? AND ? and owner = ?", queryargs, null, "startTime",null);
                 break;
             case 3: // This month
-                queryargs = new String[2];
-                queryargs[0]=getTimeAfterDays(0);
+                queryargs = new String[3];
+                queryargs[0]=getTimeAfterDays(8);
                 queryargs[1]=getTimeAfterDays(30);
-                events = Event.find(Event.class, "startTime BETWEEN ? AND ?", queryargs, null, "startTime",null);
+                queryargs[2] = owner;
+                events = Event.find(Event.class, "startTime BETWEEN ? AND ? and owner = ?", queryargs, null, "startTime",null);
                 break;
             case 4: // UW
                // events = Event.find(Event.class, "organization = UW", null, null, "startTime",null);

@@ -5,6 +5,8 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.text.format.DateFormat;
+import android.view.ContextThemeWrapper;
 
 import java.util.Calendar;
 
@@ -28,6 +30,7 @@ public class TimePickerFragment extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        return new TimePickerDialog(getActivity(), listener, hourOfDay, minute, true);
+        ContextThemeWrapper wrapper = new ContextThemeWrapper(getActivity(), android.R.style.Theme_Holo_Dialog);
+        return new TimePickerDialog(wrapper, listener, hourOfDay, minute, false);
     }
 }
