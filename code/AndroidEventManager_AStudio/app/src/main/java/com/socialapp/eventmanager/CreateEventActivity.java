@@ -67,8 +67,6 @@ public class CreateEventActivity extends FragmentActivity {
         start = Calendar.getInstance();
         end = Calendar.getInstance();
 
-        imageView = (ImageView)findViewById(R.id.imgView);
-
         startDate.setText(new SimpleDateFormat("MM/dd/yyyy").format(start.getTime()));
         endDate.setText(new SimpleDateFormat("MM/dd/yyyy").format(end.getTime()));
 
