@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.ParcelFileDescriptor;
 import android.preference.PreferenceManager;
+import android.provider.CalendarContract;
 import android.provider.MediaStore;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
@@ -224,6 +225,10 @@ public class CreateEventActivity extends FragmentActivity {
                             runOnUiThread(new Runnable() {
                                 public void run() {
                                     Toast.makeText(getApplicationContext(), result, Toast.LENGTH_SHORT).show();
+
+                                    // Calender: Event addition
+                                    // Add event to the default calender used by the user.
+                                    addEventToCalender(event);
                                 }
                             });
                         }
@@ -306,5 +311,44 @@ public class CreateEventActivity extends FragmentActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void addEventToCalender(Event event)
+    {
+        String title = event.name;
+        String description = event.description;
+        String location = event.location;
+        long start_time = event.start_time * 1000;
+        long end_time = event.end_time * 1000;
+        int access_level = event.public_event ?
+                CalendarContract.Events.ACCESS_PUBLIC :
+                CalendarContract.Events.ACCESS_PRIVATE;
+
+        if (Build.VERSION.SDK_INT >= 14) {
+            Intent intent = new Intent(Intent.ACTION_INSERT)
+                    .setData(CalendarContract.Events.CONTENT_URI)
+                    .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, start_time)
+                    .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, end_time)
+                    .putExtra(CalendarContract.Events.TITLE, "AndroidEventManager: " + title)
+                    .putExtra(CalendarContract.Events.DESCRIPTION, "AndroidEventManager: " + description)
+                    .putExtra(CalendarContract.Events.EVENT_LOCATION, "AndroidEventManager: " + location)
+                    .putExtra(CalendarContract.Events.AVAILABILITY, CalendarContract.Events.AVAILABILITY_BUSY)
+                    .putExtra(CalendarContract.Events.ACCESS_LEVEL, access_level)
+                    .putExtra(Intent.EXTRA_EMAIL, "a@b.com,c@d.com");
+            Toast.makeText(this, "Event about to be added to the default calender. Please click SAVE.", Toast.LENGTH_SHORT).show();
+            startActivity(intent);
+        }
+        else {
+            Calendar cal = Calendar.getInstance();
+            Intent intent = new Intent(Intent.ACTION_EDIT);
+            intent.setType("vnd.android.cursor.item/event");
+            intent.putExtra("beginTime", start_time);
+            intent.putExtra("allDay", true);
+            intent.putExtra("rrule", "FREQ=YEARLY");
+            intent.putExtra("endTime", end_time);
+            intent.putExtra("title", "AndroidEventManager: " + title);
+            startActivity(intent);
+        }
+
     }
 }
