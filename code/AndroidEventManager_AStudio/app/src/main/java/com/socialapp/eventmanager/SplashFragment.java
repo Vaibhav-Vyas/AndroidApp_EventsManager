@@ -155,20 +155,6 @@ public class SplashFragment extends Fragment {
                 });
                 batch.executeAsync();
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                 if (null != profile)
                 {
                     SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());

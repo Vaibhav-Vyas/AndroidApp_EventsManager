@@ -160,6 +160,10 @@ public class CreateEventActivity extends FragmentActivity {
                 startActivityForResult(galleryIntent, RESULT_LOAD_IMG);
             break;
 
+            case R.id.invite_friends_button:
+                Intent intent = new Intent(this, ContactSelectorActivity.class);
+                startActivity(intent);
+            break;
 
             case R.id.create_event_button:
                 Event event = new Event();

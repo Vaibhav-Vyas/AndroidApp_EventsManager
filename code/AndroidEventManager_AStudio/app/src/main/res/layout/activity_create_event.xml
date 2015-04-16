@@ -133,6 +133,14 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="Invite Friends"
+        android:id="@+id/invite_friends_button"
+        android:onClick="onClick"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp" />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:text="Create Event"
         android:id="@+id/create_event_button"
         android:onClick="onClick"
