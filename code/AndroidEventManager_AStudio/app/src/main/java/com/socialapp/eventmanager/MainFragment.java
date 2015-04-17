@@ -7,6 +7,7 @@ package com.socialapp.eventmanager;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -252,7 +253,9 @@ public class MainFragment extends Fragment {
             eventLocationText.setText(currEvent.location);
 
             ImageView iv= (ImageView)eventItem.findViewById(R.id.eventImage);
-            iv.setImageResource(R.drawable.event_pic);
+            //iv.setImageResource(R.drawable.event_pic);
+            iv.setImageBitmap(BitmapFactory
+                    .decodeFile(currEvent.image_url));
 
             eventContainer.addView(eventItem);
         }

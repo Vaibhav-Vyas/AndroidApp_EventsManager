@@ -43,7 +43,7 @@ public class CreateEventActivity extends FragmentActivity {
     private Button endDate;
     private Button startTime;
     private Button endTime;
-    private static final String TAG = "Sujith";
+    private static final String TAG = "Create event tag:";
 
     private static final int RESULT_LOAD_IMG = 1;
     private String imgDecodableString;
@@ -181,6 +181,8 @@ public class CreateEventActivity extends FragmentActivity {
                 event.description = editText.getText().toString();
 
 
+                event.image_url = imgDecodableString;
+
                 public_private_switch = (Switch) findViewById(R.id.publicPrivate);
                 if(public_private_switch.isChecked()){
                     event.public_event=true;
@@ -263,6 +265,9 @@ public class CreateEventActivity extends FragmentActivity {
                 // Get the Image from data
 
                 Uri selectedImage = data.getData();
+
+                Log.d(TAG, selectedImage.toString());
+
                 String[] filePathColumn = { MediaStore.Images.Media.DATA };
 
                 // Get the cursor
@@ -273,6 +278,8 @@ public class CreateEventActivity extends FragmentActivity {
 
                 int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
                 imgDecodableString = cursor.getString(columnIndex);
+
+                Log.d(TAG, imgDecodableString);
                 cursor.close();
                 ImageView imgView = (ImageView) findViewById(R.id.imgView);
                 // Set the Image in ImageView after decoding the String
