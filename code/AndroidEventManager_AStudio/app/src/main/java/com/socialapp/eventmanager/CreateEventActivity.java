@@ -54,7 +54,6 @@ public class CreateEventActivity extends FragmentActivity {
     Calendar start, end;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -167,7 +166,7 @@ public class CreateEventActivity extends FragmentActivity {
             break;
 
             case R.id.create_event_button:
-                Event event = new Event();
+                final Event event = new Event();
 
                 event.eventId = "dummy" + (long)Calendar.getInstance().getTimeInMillis()/1000;
 
@@ -210,6 +209,8 @@ public class CreateEventActivity extends FragmentActivity {
                 if((event.name).matches("")){
                     Toast.makeText(this, "Please insert a name for the event", Toast.LENGTH_SHORT).show();
                 }else{
+
+                    Log.d("Sujith", " Saving event with start_time = " + event.start_time);
 
                     event.save();
 

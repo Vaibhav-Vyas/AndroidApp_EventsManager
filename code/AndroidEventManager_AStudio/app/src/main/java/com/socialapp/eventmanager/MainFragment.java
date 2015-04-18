@@ -188,6 +188,7 @@ public class MainFragment extends Fragment {
                 queryargs[0]= getTimeAfterDays(0);
                 queryargs[1]= getTimeAfterDays(1);
                 queryargs[2] = owner;
+                Log.d("Sujith", " Section 1: Finding events between = " + queryargs[0] + " and " + queryargs[1]);
                 events = Event.find(Event.class, "startTime BETWEEN ? AND ? and owner = ?", queryargs, null, "startTime",null);
                 break;
             case 2: // This week
@@ -195,6 +196,7 @@ public class MainFragment extends Fragment {
                 queryargs[0]=getTimeAfterDays(1);
                 queryargs[1]=getTimeAfterDays(7);
                 queryargs[2] = owner;
+                Log.d("Sujith", " Section 2: Finding events between = " + queryargs[0] + " and " + queryargs[1]);
                 events = Event.find(Event.class, "startTime BETWEEN ? AND ? and owner = ?", queryargs, null, "startTime",null);
                 break;
             case 3: // This month
@@ -202,6 +204,7 @@ public class MainFragment extends Fragment {
                 queryargs[0]=getTimeAfterDays(8);
                 queryargs[1]=getTimeAfterDays(30);
                 queryargs[2] = owner;
+                Log.d("Sujith", " Section 3: Finding events between = " + queryargs[0] + " and " + queryargs[1]);
                 events = Event.find(Event.class, "startTime BETWEEN ? AND ? and owner = ?", queryargs, null, "startTime",null);
                 break;
             case 4: // UW

@@ -242,6 +242,45 @@ public class LoginActivity extends FragmentActivity {
     }
 
 
+    // This is only for Testing purpose .... remove it later on
+
+    public void login_for_test(View view){
+        final EditText emailView = (EditText)findViewById(R.id.email);
+        EditText pwView = (EditText) findViewById(R.id.password);
+        final Context currContext = this;
+
+        String email = emailView.getText().toString();
+        String password = pwView.getText().toString();
+
+
+        if((emailView.getText().toString()).matches("")){
+            Toast.makeText(this, "Please enter your email id", Toast.LENGTH_SHORT).show();
+        }else{
+
+
+              SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+              SharedPreferences.Editor editor = prefs.edit();
+              editor.putString("email", emailView.getText().toString());
+              editor.commit();
+
+              Intent intent = new Intent(currContext, MainActivity.class);
+              startActivity(intent);
+
+        }
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
     public void signup(View view){
 
         EditText emailView = (EditText)findViewById(R.id.email);
