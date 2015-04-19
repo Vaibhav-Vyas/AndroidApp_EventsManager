@@ -201,7 +201,7 @@ public class MainFragment extends Fragment {
                 break;
             case 3: // This month
                 queryargs = new String[3];
-                queryargs[0]=getTimeAfterDays(8);
+                queryargs[0]=getTimeAfterDays(7);
                 queryargs[1]=getTimeAfterDays(30);
                 queryargs[2] = owner;
                 Log.d("Sujith", " Section 3: Finding events between = " + queryargs[0] + " and " + queryargs[1]);
@@ -284,7 +284,7 @@ public class MainFragment extends Fragment {
     public static String getTimeAfterDays(int days) {
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DAY_OF_YEAR, days);
-        return String.valueOf(cal.getTimeInMillis()/1000);
+        return String.valueOf((cal.getTimeInMillis())/1000);
     }
 
 
