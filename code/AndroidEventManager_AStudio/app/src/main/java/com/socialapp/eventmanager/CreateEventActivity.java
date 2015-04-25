@@ -30,6 +30,8 @@ import android.widget.Toast;
 
 import com.socialapp.eventmanager.Models.Event;
 
+import org.json.JSONObject;
+
 import java.io.FileDescriptor;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -168,7 +170,7 @@ public class CreateEventActivity extends FragmentActivity {
             case R.id.create_event_button:
                 final Event event = new Event();
 
-                event.eventId = "dummy" + (long)Calendar.getInstance().getTimeInMillis()/1000;
+                //event.eventId = "dummy" + (long)Calendar.getInstance().getTimeInMillis()/1000;
 
                 EditText editText = (EditText)findViewById(R.id.event_name);
                 event.name= editText.getText().toString();
@@ -214,47 +216,78 @@ public class CreateEventActivity extends FragmentActivity {
 
                     event.save();
 
+                    saveEventToBackend(event);
 
-                    //////////////////////////////////
-                    /// Send to Server //////////////
-                    //////////////////////////////////
 
-                    Backend.createEvent(event, new Backend.CreateEventCallback() {
-                        @Override
-                        public void onRequestCompleted(final String result) {
-
-                            //Log.d(TAG, "Login success. User: " + user.toString());
-
-                            runOnUiThread(new Runnable() {
-                                public void run() {
-                                    Toast.makeText(getApplicationContext(), result, Toast.LENGTH_SHORT).show();
-
-                                    // Calender: Event addition
-                                    // Add event to the default calender used by the user.
-                                    addEventToCalender(event);
-                                }
-                            });
-                        }
-
-                        @Override
-                        public void onRequestFailed(final String message) {
-
-                            //NOTE: parameter validation and filtering is handled by the backend, just show the
-                            //returned error message to the user
-                            Log.d(TAG, "Received error from Backend: " + message);
-                            runOnUiThread(new Runnable() {
-                                public void run() {
-                                    Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                        }
-                    });
                     super.onBackPressed();
                 }
 
                 break;
         }
     }
+
+    public void saveEventToBackend(final Event event)
+    {
+        Backend.createEvent(event, new Backend.CreateEventCallback() {
+            @Override
+            public void onRequestCompleted(final String result) {
+                runOnUiThread(new Runnable() {
+                    public void run() {
+                        try {
+                            JSONObject obj = new JSONObject(result);
+                            event.eventId = obj.getString("eventId");
+                            event.save();
+                            Toast.makeText(getApplicationContext(), result, Toast.LENGTH_SHORT).show();
+                            if(event.image_url != null)
+                            {
+                                sendEventImageToBackend(event);
+                            }
+
+                            addEventToCalender(event);
+                        }
+                        catch(Throwable t)
+                        {
+                            Log.d(TAG, "Error converting result to json");
+                        }
+
+
+
+                    }
+                });
+            }
+            @Override
+            public void onRequestFailed(final String message) {
+                //NOTE: parameter validation and filtering is handled by the backend, just show the
+                //returned error message to the user
+                Log.d(TAG, "Received error from Backend: " + message);
+                runOnUiThread(new Runnable() {
+                    public void run() {
+                        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
+    }
+
+    public void sendEventImageToBackend(final Event event)
+    {
+        Backend.saveImage(event, new Backend.BackendCallback() {
+            @Override
+            public void onRequestCompleted(final String result) {
+                runOnUiThread(new Runnable() {
+                    public void run() {
+                        Log.d(TAG, "Image saved successfully on backend");
+                    }
+                });
+            }
+
+            @Override
+            public void onRequestFailed(final String message) {
+                Log.d(TAG, "Received error from Backend: " + message);
+            }
+        });
+    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

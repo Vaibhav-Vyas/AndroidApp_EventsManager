@@ -1,24 +1,44 @@
 package com.socialapp.eventmanager;
 
 import net.callumtaylor.asynchttp.AsyncHttpClient;
+
+import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import com.google.gson.*;
+import com.loopj.android.http.AsyncHttpRequest;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 import com.socialapp.eventmanager.Models.User;
 
 import net.callumtaylor.asynchttp.AsyncHttpClient;
 import net.callumtaylor.asynchttp.response.JsonResponseHandler;
 import org.apache.http.Header;
 
+import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.entity.mime.HttpMultipartMode;
+import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.content.FileBody;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.net.URL;
+import java.nio.channels.AsynchronousCloseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import com.socialapp.eventmanager.Models.Event;
+
 /**
  * API Connection class.
  *
@@ -216,7 +236,7 @@ public class Backend {
                 // Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").create();
                 //  User user = gson.fromJson(result, User.class);
 
-                callback.onRequestCompleted("Create Event Success");
+                callback.onRequestCompleted(result.toString());
             }
 
             @Override
@@ -226,8 +246,137 @@ public class Backend {
         });
     }
 
+    public static void sendRegistrationIdToBackend(String email, String regId, final BackendCallback callback) {
+        AsyncHttpClient client = new AsyncHttpClient(SERVER_URL);
+        StringEntity jsonParams = null;
+
+        try {
+            JSONObject json = new JSONObject();
+            //json.put("email", email);
+            //json.put("password", password);
+            jsonParams = new StringEntity(json.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        List<Header> headers = new ArrayList<Header>();
+        headers.add(new BasicHeader("Accept", "application/json"));
+        headers.add(new BasicHeader("Content-Type", "application/json"));
 
 
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        params.add(new BasicNameValuePair("email", email));
+        params.add(new BasicNameValuePair("regid", regId));
+
+
+        client.get("users/gcm_register", params, headers, new JsonResponseHandler() {
+            @Override public void onSuccess() {
+                JsonObject result = getContent().getAsJsonObject();
+                callback.onRequestCompleted("GCM registration id sent succesfully");
+            }
+
+            @Override
+            public void onFailure() {
+                callback.onRequestFailed(handleFailure(getContent()));
+            }
+        });
+    }
+
+    public static void getImageFromServer(Event event, final BackendCallback callback)
+    {
+        AsyncHttpClient client = new AsyncHttpClient(SERVER_URL);
+
+        List<Header> headers = new ArrayList<Header>();
+        headers.add(new BasicHeader("Accept", "application/json"));
+        headers.add(new BasicHeader("Content-Type", "application/json"));
+
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        params.add(new BasicNameValuePair("email", event.owner));
+        params.add(new BasicNameValuePair("eventId", event.eventId));
+
+        client.get("events/get_image", params, headers, new JsonResponseHandler() {
+            @Override public void onSuccess() {
+                try {
+                    JSONObject result = new JSONObject(getContent().toString());
+                    callback.onRequestCompleted(result.getString("url"));
+                }
+                catch(Exception e)
+                {
+                    callback.onRequestFailed(handleFailure(getContent()));
+                }
+
+            }
+
+            @Override
+            public void onFailure() {
+                callback.onRequestFailed(handleFailure(getContent()));
+            }
+        });
+    }
+
+    public static void saveImage(Event event, final BackendCallback callback)
+    {
+        //Header[] headers = new Header[2];
+        //headers[0] = new BasicHeader("Content-Type", "")
+
+        RequestParams params = new RequestParams();
+        params.put("email",event.owner);
+        params.put("eventId", event.eventId);
+        params.put("image", event.image_url);
+
+        try {
+            params.put("image", new File(event.image_url));
+        }
+        catch (Exception e)
+        {
+            Log.d("Error :", e.toString());
+            return;
+        }
+
+        com.loopj.android.http.AsyncHttpClient client = new com.loopj.android.http.AsyncHttpClient();
+
+        client.post(SERVER_URL + "events/save_image.json", params, new com.loopj.android.http.AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] response) {
+                // called when response HTTP status is "200 OK"
+                Log.d(TAG, "Image successfully uploaded");
+                callback.onRequestCompleted("Image successfully uploaded");
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
+                Log.d(TAG, "Error in uploading image");
+            }
+        });
+    }
+
+
+    public static void getEventFromServer(String eventId, String email, final BackendCallback callback) {
+        AsyncHttpClient client = new AsyncHttpClient(SERVER_URL);
+        StringEntity jsonParams = null;
+
+
+        List<Header> headers = new ArrayList<Header>();
+        headers.add(new BasicHeader("Accept", "application/json"));
+        headers.add(new BasicHeader("Content-Type", "application/json"));
+
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        params.add(new BasicNameValuePair("email", email));
+        params.add(new BasicNameValuePair("eventId", eventId));
+
+
+        client.get("events/info", params, headers, new JsonResponseHandler() {
+            @Override public void onSuccess() {
+                String result = getContent().toString();
+                callback.onRequestCompleted(result);
+            }
+
+            @Override
+            public void onFailure() {
+                callback.onRequestFailed(handleFailure(getContent()));
+            }
+        });
+    }
 
 
 

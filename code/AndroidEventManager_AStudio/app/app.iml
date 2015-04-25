@@ -92,9 +92,10 @@
     <orderEntry type="library" exported="" name="support-v4-21.0.3" level="project" />
     <orderEntry type="library" exported="" name="httpcore-4.2.4" level="project" />
     <orderEntry type="library" exported="" name="support-annotations-21.0.3" level="project" />
+    <orderEntry type="library" exported="" name="android-async-http-1.4.6" level="project" />
     <orderEntry type="library" exported="" name="asynchttpclient-1.5" level="project" />
     <orderEntry type="library" exported="" name="bolts-android-1.1.4" level="project" />
-    <orderEntry type="library" exported="" name="play-services-6.5.87" level="project" />
+    <orderEntry type="library" exported="" name="play-services-3.1.59" level="project" />
   </component>
 </module>
 

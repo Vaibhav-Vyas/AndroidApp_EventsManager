@@ -235,7 +235,8 @@ public class MainFragment extends Fragment {
                     String eventJSON=gson.toJson(selectedEvent,Event.class);
 
                     Intent newActivity=new Intent(getActivity(),DisplayEventActivity.class);
-                    newActivity.putExtra("event",eventJSON);
+                    newActivity.putExtra("event", eventJSON);
+                    newActivity.putExtra("location", "local");
                     startActivity(newActivity);
 
                 }
@@ -256,9 +257,16 @@ public class MainFragment extends Fragment {
             eventLocationText.setText(currEvent.location);
 
             ImageView iv= (ImageView)eventItem.findViewById(R.id.eventImage);
-            //iv.setImageResource(R.drawable.event_pic);
-            iv.setImageBitmap(BitmapFactory
-                    .decodeFile(currEvent.image_url));
+
+            if(currEvent.image_url != null && !currEvent.image_url.equals(""))
+            {
+                iv.setImageBitmap(BitmapFactory.decodeFile(currEvent.image_url));
+            }
+            else
+            {
+                iv.setImageResource(R.drawable.event_pic);
+            }
+
 
             eventContainer.addView(eventItem);
         }

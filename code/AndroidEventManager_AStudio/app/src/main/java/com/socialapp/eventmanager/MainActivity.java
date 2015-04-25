@@ -7,6 +7,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.support.v4.view.ViewPager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -107,7 +108,7 @@ public class MainActivity extends ActionBarActivity
             gcm = GoogleCloudMessaging.getInstance(this);
             regid = getRegistrationId(context);
             Log.i(TAG, "Reg id: " + regid);
-
+            sendRegistrationIdToBackend(regid);
             if (regid.isEmpty()) {
                 registerInBackground();
             }
@@ -257,7 +258,7 @@ public class MainActivity extends ActionBarActivity
                     // so it can use GCM/HTTP or CCS to send messages to your app.
                     // The request to your server should be authenticated if your app
                     // is using accounts.
-                    sendRegistrationIdToBackend();
+                    sendRegistrationIdToBackend(regid);
 
                     // For this demo: we don't need to send it because the device
                     // will send upstream messages to a server that echo back the
@@ -288,8 +289,30 @@ public class MainActivity extends ActionBarActivity
      * device sends upstream messages to a server that echoes back the message
      * using the 'from' address in the message.
      */
-    private void sendRegistrationIdToBackend() {
-        // Your implementation here.
+    private void sendRegistrationIdToBackend(String regid) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        String email = prefs.getString("email", null);
+        Backend.sendRegistrationIdToBackend(email, regid, new Backend.BackendCallback() {
+            @Override
+            public void onRequestCompleted(final String result) {
+                runOnUiThread(new Runnable() {
+                    public void run() {
+                        Toast.makeText(getApplicationContext(), result, Toast.LENGTH_SHORT).show();
+                        Log.d(TAG, "GCM registration id sent succesfully");
+                    }
+                });
+            }
+
+            @Override
+            public void onRequestFailed(final String message) {
+                Log.d(TAG, "GCM register: error from Backend: " + message);
+                runOnUiThread(new Runnable() {
+                    public void run() {
+                        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
     }
 
     /**
