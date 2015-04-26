@@ -39,13 +39,13 @@
             android:value="event.db" />
         <meta-data
             android:name="VERSION"
-            android:value="2" />
+            android:value="3" />
         <meta-data
             android:name="QUERY_LOG"
             android:value="false" />
         <meta-data
             android:name="DOMAIN_PACKAGE_NAME"
-            android:value="com.socialapp.eventmanager.Model" />
+            android:value="com.socialapp.eventmanager.Models" />
 
         <activity
             android:name=".MainActivity"

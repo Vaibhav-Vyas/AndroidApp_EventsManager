@@ -213,6 +213,7 @@ public class MainFragment extends Fragment {
                 break;
             default: // All events
                 events = Event.find(Event.class, "startTime > 0", null, null, "startTime",null);
+                //events = Event.listAll(Event.class);
                 break;
         }
 

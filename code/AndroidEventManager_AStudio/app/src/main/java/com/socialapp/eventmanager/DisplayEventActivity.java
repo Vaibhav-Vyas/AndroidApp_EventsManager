@@ -1,6 +1,8 @@
 package com.socialapp.eventmanager;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
@@ -59,49 +61,15 @@ public class DisplayEventActivity extends ActionBarActivity {
         time = "" + cl.get(Calendar.HOUR_OF_DAY) + ":" + cl.get(Calendar.MINUTE);
         tv.setText(date + " , " + time);
 
-        if(local) {
-            ImageView iv = (ImageView) findViewById(R.id.eventImage);
+        ImageView iv = (ImageView) findViewById(R.id.eventImage);
+        if(event.image_url != "") {
+            Log.d(TAG, "Showing image :" + event.image_url);
             iv.setImageBitmap(BitmapFactory.decodeFile(event.image_url));
+            Log.d(TAG, "Image showed");
         }
         else
         {
-            event.save();
-            Backend.getImageFromServer(event, new Backend.BackendCallback() {
-                @Override
-                public void onRequestCompleted(final String path) {
-                            try {
-                                URL url = new URL(path);
-                                Log.d(TAG, "Image url is: " + path);
-                                final Bitmap bmp = BitmapFactory.decodeStream((InputStream)url.getContent());
-                                //InputStream is = (InputStream)url.getContent();
-                                //final Drawable d = Drawable.createFromStream(is, "src");
-                                final ImageView iv = (ImageView) findViewById(R.id.eventImage);
-
-                                runOnUiThread(new Runnable() {
-                                    public void run() {
-                                        //iv.setImageDrawable(d);
-                                        iv.setImageBitmap(bmp);
-                                        String imagePath = MediaStore.Images.Media.insertImage(getContentResolver(), bmp, event.eventId + "_" + event.name, "EventImage");
-                                        event.image_url = imagePath;
-                                        Log.d(TAG, "Image saved at: " + imagePath);
-                                        event.save();
-                                    }
-                                });
-                            } catch (Exception t) {
-                                Log.d(TAG, t.toString());
-                                Log.d(TAG, "Error in getting image from url");
-                            }
-                }
-
-                @Override
-                public void onRequestFailed(final String message) {
-                    runOnUiThread(new Runnable() {
-                        public void run() {
-                            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                }
-            });
+            iv.setImageResource(R.drawable.event_pic);
         }
     }
 
@@ -130,26 +98,34 @@ public class DisplayEventActivity extends ActionBarActivity {
             String eventId = getIntent().getStringExtra("eventId");
             event.owner = getIntent().getStringExtra("eventOwner");
             event.eventId = getIntent().getStringExtra("eventId");
+
             Backend.getEventFromServer(eventId, email, new Backend.BackendCallback() {
                 @Override
                 public void onRequestCompleted(final String result) {
-                    runOnUiThread(new Runnable() {
-                        public void run() {
-                            try {
-                                System.out.println("Result is : " + result);
-                                JSONObject obj = new JSONObject(result);
-                                event.name = obj.getString("name");
-                                event.description = obj.getString("description");
-                                event.location = obj.getString("location");
-                                //event.event_type = obj.getString("type");
-                                showEventOnUI(event, false);
-                            }
-                            catch(Throwable t)
-                            {
-                                Log.d(TAG, "Error converting result to json");
-                            }
+                    try {
+                        System.out.println("Result is : " + result);
+                        JSONObject obj = new JSONObject(result);
+                        event.name = obj.getString("name");
+                        event.description = obj.getString("description");
+                        event.location = obj.getString("location");
+                        event.image_url=obj.getString("imageUrl");
+                        event.start_time= Integer.parseInt(obj.getString("startTime"));
+                        event.end_time= Integer.parseInt(obj.getString("endTime"));
+                        event.organization=obj.getString("organization");
+                        Log.d(TAG, "Image url: " + event.image_url);
+                        if(event.image_url!=""){
+                            saveImageToGallery(event);
                         }
-                    });
+                        event.save();
+                        runOnUiThread(new Runnable() {
+                            public void run() {
+                                    showEventOnUI(event, false);
+                                }
+                        });
+                    }  catch(Throwable t)
+                    {
+                        Log.d(TAG, "Error converting result to json");
+                    }
                 }
 
                 @Override
@@ -167,11 +143,38 @@ public class DisplayEventActivity extends ActionBarActivity {
 
 
 
+    private void saveImageToGallery(Event event){
+        try {
+            URL url = new URL(event.image_url);
+            Bitmap bmp = BitmapFactory.decodeStream((InputStream)url.getContent());
+
+            String imagePath = MediaStore.Images.Media.insertImage(getContentResolver(), bmp, event.eventId + "_" + event.name, "EventImage");
+            String[] filePathColumn = { MediaStore.Images.Media.DATA };
+            Cursor cursor = getContentResolver().query(Uri.parse(imagePath), filePathColumn, null, null, null);
+            cursor.moveToFirst();
+            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+
+            event.image_url = cursor.getString(columnIndex);;
+            Log.d(TAG, "Image saved to gallery at: " + imagePath);
+
+        } catch (Exception t) {
+            Log.d(TAG, t.toString());
+            Log.d(TAG, "Error in getting image from url");
+        }
+    }
+
+
     @Override
     protected void onResume() {
         super.onResume();
     }
 
+    @Override
+    public void onBackPressed()
+    {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -194,4 +197,5 @@ public class DisplayEventActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
 }

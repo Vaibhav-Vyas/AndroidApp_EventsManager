@@ -282,38 +282,6 @@ public class Backend {
         });
     }
 
-    public static void getImageFromServer(Event event, final BackendCallback callback)
-    {
-        AsyncHttpClient client = new AsyncHttpClient(SERVER_URL);
-
-        List<Header> headers = new ArrayList<Header>();
-        headers.add(new BasicHeader("Accept", "application/json"));
-        headers.add(new BasicHeader("Content-Type", "application/json"));
-
-        List<NameValuePair> params = new ArrayList<NameValuePair>();
-        params.add(new BasicNameValuePair("email", event.owner));
-        params.add(new BasicNameValuePair("eventId", event.eventId));
-
-        client.get("events/get_image", params, headers, new JsonResponseHandler() {
-            @Override public void onSuccess() {
-                try {
-                    JSONObject result = new JSONObject(getContent().toString());
-                    callback.onRequestCompleted(result.getString("url"));
-                }
-                catch(Exception e)
-                {
-                    callback.onRequestFailed(handleFailure(getContent()));
-                }
-
-            }
-
-            @Override
-            public void onFailure() {
-                callback.onRequestFailed(handleFailure(getContent()));
-            }
-        });
-    }
-
     public static void saveImage(Event event, final BackendCallback callback)
     {
         //Header[] headers = new Header[2];

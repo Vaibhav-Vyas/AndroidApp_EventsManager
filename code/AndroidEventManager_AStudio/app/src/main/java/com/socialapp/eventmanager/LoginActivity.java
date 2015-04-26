@@ -253,9 +253,6 @@ public class LoginActivity extends FragmentActivity {
         String password = pwView.getText().toString();
 
 
-        if((emailView.getText().toString()).matches("")){
-            Toast.makeText(this, "Please enter your email id", Toast.LENGTH_SHORT).show();
-        }else{
 
 
               SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
@@ -266,7 +263,7 @@ public class LoginActivity extends FragmentActivity {
               Intent intent = new Intent(currContext, MainActivity.class);
               startActivity(intent);
 
-        }
+
 
     }
 

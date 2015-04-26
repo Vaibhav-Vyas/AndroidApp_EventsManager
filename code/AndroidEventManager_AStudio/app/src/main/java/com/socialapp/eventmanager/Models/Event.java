@@ -35,7 +35,7 @@ public class Event extends SugarRecord<Event>{
 
     public String organization;
 
-    public ArrayList<String> event_type;
+    public String event_type;
 
 
     //No-args constructor required by Sugar

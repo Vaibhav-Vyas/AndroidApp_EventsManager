@@ -237,6 +237,7 @@ public class CreateEventActivity extends FragmentActivity {
                             JSONObject obj = new JSONObject(result);
                             event.eventId = obj.getString("eventId");
                             event.save();
+
                             Toast.makeText(getApplicationContext(), result, Toast.LENGTH_SHORT).show();
                             if(event.image_url != null)
                             {

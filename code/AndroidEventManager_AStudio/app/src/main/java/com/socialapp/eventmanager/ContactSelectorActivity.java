@@ -38,8 +38,8 @@ public class ContactSelectorActivity extends ActionBarActivity {
                 // adding this check to reduce the number of queries.
                 if (s.length() >= 3 ) {
                     View view = getWindow().getDecorView();
-        searchContactsInfo(view, false);
-    }
+                    searchContactsInfo(view, false);
+                 }
 
 }
 });
