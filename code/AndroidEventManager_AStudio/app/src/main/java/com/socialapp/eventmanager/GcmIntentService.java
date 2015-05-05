@@ -79,13 +79,49 @@ public class GcmIntentService extends IntentService {
             case "1":
                 invitedToEvent(msg);
                 break;
+            case "2":
+                responseFromInvitee(msg);
         }
 
     }
 
+    private void responseFromInvitee(Bundle msg)
+    {
+
+        Log.d(TAG, "User accepted your invitation");
+        String user = msg.getString("email");
+        String response = msg.getString("response");
+        String eventId = msg.getString("eventId");
+
+
+        mNotificationManager = (NotificationManager)this.getSystemService(Context.NOTIFICATION_SERVICE);
+
+        Intent displayActivityIntent = new Intent(this, DisplayEventActivity.class);
+        displayActivityIntent.putExtra("eventId", eventId);
+        displayActivityIntent.putExtra("location", "server");
+        displayActivityIntent.putExtra("invitedBy", user);
+
+        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, displayActivityIntent , PendingIntent.FLAG_CANCEL_CURRENT);
+
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(this)
+                        .setSmallIcon(R.drawable.plus)   //TODO: change this icon
+                        .setContentTitle(user + " " + response + " your event")
+                        .setStyle(new NotificationCompat.BigTextStyle()
+                                .bigText(eventId))
+                        .setContentText(eventId);
+
+        mBuilder.setContentIntent(contentIntent);
+        mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
+
+
+
+    }
+
+
     private void invitedToEvent(Bundle msg)
     {
-        String owner = msg.getString("email");
+        String invitedBy = msg.getString("invitedBy");
         String eventName = msg.getString("eventName");
         String eventId = msg.getString("eventId");
 
@@ -95,7 +131,7 @@ public class GcmIntentService extends IntentService {
         Intent displayActivityIntent = new Intent(this, DisplayEventActivity.class);
         displayActivityIntent.putExtra("eventId", eventId);
         displayActivityIntent.putExtra("location", "server");
-        displayActivityIntent.putExtra("eventOwner", owner);
+        displayActivityIntent.putExtra("invitedBy", invitedBy);
 
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0, displayActivityIntent , PendingIntent.FLAG_CANCEL_CURRENT);
 
@@ -105,7 +141,7 @@ public class GcmIntentService extends IntentService {
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.drawable.plus)   //TODO: change this icon
-                        .setContentTitle(owner + " invited you to " + eventName)
+                        .setContentTitle(invitedBy + " invited you to " + eventName)
                         .setStyle(new NotificationCompat.BigTextStyle()
                                 .bigText(eventId))
                         .setContentText(eventId);
@@ -113,7 +149,7 @@ public class GcmIntentService extends IntentService {
         mBuilder.setContentIntent(contentIntent);
         mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
 
-        Log.d(TAG, "Notification displayed :" + owner + " invited you to " + eventName);
+        Log.d(TAG, "Notification displayed :" + invitedBy + " invited you to " + eventName);
 
     }
 }

@@ -348,7 +348,47 @@ public class Backend {
 
 
 
+    public static void InviteFriends(Event event, String friends_to_invite, final BackendCallback callback) {
+        AsyncHttpClient client = new AsyncHttpClient(SERVER_URL);
+        StringEntity jsonParams = null;
 
+        try {
+            JSONObject json = new JSONObject();
+            jsonParams = new StringEntity(json.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        List<Header> headers = new ArrayList<Header>();
+        headers.add(new BasicHeader("Accept", "application/json"));
+        headers.add(new BasicHeader("Content-Type", "application/json"));
+
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        params.add(new BasicNameValuePair("email",event.owner));
+        params.add(new BasicNameValuePair("eventId",event.eventId));
+        params.add(new BasicNameValuePair("list",friends_to_invite));
+
+        client.get("/events/invite", params, headers, new JsonResponseHandler() {
+            @Override public void onSuccess() {
+                JsonObject result = getContent().getAsJsonObject();
+
+
+                // result.addProperty("backendId", result.get("id").toString());
+                //result.remove("id");
+
+                Log.d(TAG, "Login returned: " + result.get("msg").toString());
+                // Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").create();
+                //  User user = gson.fromJson(result, User.class);
+
+                callback.onRequestCompleted("Invited Friends");
+            }
+
+            @Override
+            public void onFailure() {
+                callback.onRequestFailed(handleFailure(getContent()));
+            }
+        });
+    }
 
 
 

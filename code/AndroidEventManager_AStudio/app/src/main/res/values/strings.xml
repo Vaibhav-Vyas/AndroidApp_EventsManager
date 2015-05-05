@@ -21,11 +21,11 @@
     <string name="drawer_close">closed</string>
 
     <string-array name="fragment_names">
-        <item>UW</item>
-        <item>Item2</item>
-        <item>Item3</item>
-        <item>Item4</item>
-        <item>Item5</item>
+        <item>Created Events</item>
+        <item>Accepted Events</item>
+        <item>Invited Events</item>
+        <item>Declined Events</item>
+        <item>All Events</item>
     </string-array>
 
     <string name="title_activity_create_event">Create Event</string>

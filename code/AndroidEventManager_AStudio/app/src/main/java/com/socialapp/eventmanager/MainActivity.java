@@ -108,7 +108,7 @@ public class MainActivity extends ActionBarActivity
             gcm = GoogleCloudMessaging.getInstance(this);
             regid = getRegistrationId(context);
             Log.i(TAG, "Reg id: " + regid);
-            sendRegistrationIdToBackend(regid);
+            //sendRegistrationIdToBackend(regid);
             if (regid.isEmpty()) {
                 registerInBackground();
             }
@@ -392,6 +392,7 @@ public class MainActivity extends ActionBarActivity
     public void onItemClick(AdapterView parent, View view, int position, long id) {
         Log.d(TAG, "Called onItemClicked with position = " + position);
         switch(position){
+
             case 0:
                 //switching the fragment
                 viewPager.setCurrentItem(3);

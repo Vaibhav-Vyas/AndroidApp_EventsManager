@@ -1,5 +1,6 @@
 package com.socialapp.eventmanager;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -16,6 +17,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -36,10 +38,83 @@ import java.util.List;
 
 public class DisplayEventActivity extends ActionBarActivity {
 
+    Event event;
+
+
     private static final String TAG = "DisplayEventActivity";
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_displayevent);
 
-    private void showEventOnUI(final Event event, boolean local)
+        String location = getIntent().getStringExtra("location");
+
+        Log.d(TAG, "location : " + location);
+
+        if (location.equals("local"))
+        {
+            Gson gson = new GsonBuilder().create();
+            event = gson.fromJson(getIntent().getStringExtra("event"), Event.class);
+            showEventOnUI(true);
+        }
+        else if(location.equals("server"))
+        {
+            event = new Event();
+
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+            String email = prefs.getString("email", null);
+
+
+
+            event.eventId = getIntent().getStringExtra("eventId");
+
+            Backend.getEventFromServer(event.eventId, email, new Backend.BackendCallback() {
+                @Override
+                public void onRequestCompleted(final String result) {
+                    try {
+                        System.out.println("Result is : " + result);
+                        JSONObject obj = new JSONObject(result);
+                        event.owner = obj.getString("owner");
+                        event.name = obj.getString("name");
+                        event.description = obj.getString("description");
+                        event.location = obj.getString("location");
+                        event.image_url=obj.getString("imageUrl");
+                        event.start_time= Long.parseLong(obj.getString("startTime"));
+                        event.end_time= Long.parseLong(obj.getString("endTime"));
+                        event.organization=obj.getString("organization");
+                        Log.d(TAG, "Image url: " + event.image_url);
+                        if(event.image_url!=""){
+                            saveImageToGallery(event);
+                        }
+                        event.save();
+                        runOnUiThread(new Runnable() {
+                            public void run() {
+                                    showEventOnUI(false);
+                                }
+                        });
+                    }  catch(Throwable t)
+                    {
+                        Log.d(TAG, "Error converting result to json");
+                    }
+                }
+
+                @Override
+                public void onRequestFailed(final String message) {
+                    runOnUiThread(new Runnable() {
+                        public void run() {
+                            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            });
+
+        }
+    }
+
+
+
+    private void showEventOnUI(boolean local)
     {
         Calendar cl = Calendar.getInstance();
 
@@ -66,79 +141,58 @@ public class DisplayEventActivity extends ActionBarActivity {
             Log.d(TAG, "Showing image :" + event.image_url);
             iv.setImageBitmap(BitmapFactory.decodeFile(event.image_url));
             Log.d(TAG, "Image showed");
-        }
-        else
+        }else
         {
             iv.setImageResource(R.drawable.event_pic);
         }
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        String this_user= prefs.getString("email", null);
+        if((event.owner).equals(this_user)){
+            Log.d(TAG, "Owner = this user");
+            Button add_friends_button = (Button)findViewById(R.id.addFriendsButton);
+            add_friends_button.setVisibility(View.VISIBLE);
+        }else{
+            Log.d(TAG, "Owner = not this user" + event.owner + "," + this_user);
+        }
+
+
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_displayevent);
 
-        String location = getIntent().getStringExtra("location");
 
-        Log.d(TAG, "location : " + location);
+    public void add_friends(View view){
 
-        if (location.equals("local"))
-        {
-            Gson gson = new GsonBuilder().create();
-            Event event = gson.fromJson(getIntent().getStringExtra("event"), Event.class);
-            showEventOnUI(event, true);
-        }
-        else if(location.equals("server"))
-        {
-            final Event event = new Event();
+        //Intent intent = new Intent(this, ContactSelectorActivity.class);
+        //startActivity(intent);
 
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-            String email = prefs.getString("email", null);
 
-            String eventId = getIntent().getStringExtra("eventId");
-            event.owner = getIntent().getStringExtra("eventOwner");
-            event.eventId = getIntent().getStringExtra("eventId");
+        String friends_to_invite="avinaash@cs.wisc.edu";
 
-            Backend.getEventFromServer(eventId, email, new Backend.BackendCallback() {
-                @Override
-                public void onRequestCompleted(final String result) {
-                    try {
-                        System.out.println("Result is : " + result);
-                        JSONObject obj = new JSONObject(result);
-                        event.name = obj.getString("name");
-                        event.description = obj.getString("description");
-                        event.location = obj.getString("location");
-                        event.image_url=obj.getString("imageUrl");
-                        event.start_time= Integer.parseInt(obj.getString("startTime"));
-                        event.end_time= Integer.parseInt(obj.getString("endTime"));
-                        event.organization=obj.getString("organization");
-                        Log.d(TAG, "Image url: " + event.image_url);
-                        if(event.image_url!=""){
-                            saveImageToGallery(event);
-                        }
-                        event.save();
-                        runOnUiThread(new Runnable() {
-                            public void run() {
-                                    showEventOnUI(event, false);
-                                }
-                        });
-                    }  catch(Throwable t)
-                    {
-                        Log.d(TAG, "Error converting result to json");
-                    }
-                }
-
-                @Override
-                public void onRequestFailed(final String message) {
-                    runOnUiThread(new Runnable() {
+        Backend.InviteFriends(event, friends_to_invite, new Backend.BackendCallback() {
+            @Override
+            public void onRequestCompleted(final String result) {
+                runOnUiThread(new Runnable() {
                         public void run() {
-                            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
-                        }
+                            Toast.makeText(getApplicationContext(), result, Toast.LENGTH_SHORT).show();
+                    }
                     });
-                }
-            });
 
-        }
+            }
+
+            @Override
+            public void onRequestFailed(final String message) {
+                runOnUiThread(new Runnable() {
+                    public void run() {
+                        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
+
+
+
+
     }
 
 
@@ -172,8 +226,9 @@ public class DisplayEventActivity extends ActionBarActivity {
     @Override
     public void onBackPressed()
     {
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
+        super.onBackPressed();
+        //Intent intent = new Intent(this, MainActivity.class);
+       // startActivity(intent);
     }
 
     @Override

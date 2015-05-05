@@ -7,8 +7,10 @@ package com.socialapp.eventmanager;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -18,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -65,6 +68,15 @@ public class MainFragment extends Fragment {
 
         layout_inflater = inflater;
         rootView = inflater.inflate(R.layout.fragment_main, container, false);
+
+
+        RelativeLayout rLayout = (RelativeLayout) rootView.findViewById (R.id.main_fragment_relative_layout);
+        Resources res = getResources(); //resource handle
+        Drawable drawable = res.getDrawable(R.drawable.background_main); //new Image that was added to the res folder
+
+        rLayout.setBackground(drawable);
+
+
         TextView tv = (TextView)rootView.findViewById(R.id.heading);
         tv.setText("Fragment Number : " + getArguments().getInt(ARG_SECTION_NUMBER));
         section_number = getArguments().getInt(ARG_SECTION_NUMBER);
@@ -207,13 +219,34 @@ public class MainFragment extends Fragment {
                 Log.d("Sujith", " Section 3: Finding events between = " + queryargs[0] + " and " + queryargs[1]);
                 events = Event.find(Event.class, "startTime BETWEEN ? AND ? and owner = ?", queryargs, null, "startTime",null);
                 break;
-            case 4: // UW
-               // events = Event.find(Event.class, "organization = UW", null, null, "startTime",null);
-                events = Event.find(Event.class, "startTime > 0", null, null, "startTime",null);
+            case 4: // Created Events
+                queryargs = new String[2];
+                queryargs[0]=getTimeAfterDays(0);
+                queryargs[1] = "owner";
+                events = Event.find(Event.class, "startTime > ? and status = ?", queryargs, null, "startTime",null);
+                break;
+
+            case 5: // Accepted Events
+                queryargs = new String[2];
+                queryargs[0]=getTimeAfterDays(0);
+                queryargs[1] = "accepted";
+                events = Event.find(Event.class, "startTime > ? and status = ?", queryargs, null, "startTime",null);
+                break;
+            case 6: // Invited Events
+                queryargs = new String[2];
+                queryargs[0]=getTimeAfterDays(0);
+                queryargs[1] = "invited";
+                events = Event.find(Event.class, "startTime > ? and status = ?", queryargs, null, "startTime",null);
+                break;
+            case 7: // Declined Events
+                queryargs = new String[2];
+                queryargs[0]=getTimeAfterDays(0);
+                queryargs[1] = "declined";
+                events = Event.find(Event.class, "startTime > ? and status = ?", queryargs, null, "startTime",null);
                 break;
             default: // All events
-                events = Event.find(Event.class, "startTime > 0", null, null, "startTime",null);
-                //events = Event.listAll(Event.class);
+                //events = Event.find(Event.class, "startTime > 0", null, null, "startTime",null);
+                events = Event.listAll(Event.class);
                 break;
         }
 
@@ -244,7 +277,8 @@ public class MainFragment extends Fragment {
             });
 
             Random rnd = new Random();
-            int color = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
+            int transparency = 160;
+            int color = Color.argb(transparency, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
 
             View view = eventItem.findViewById(R.id.tempRel);
             view.setBackgroundColor(color);
@@ -293,7 +327,7 @@ public class MainFragment extends Fragment {
     public static String getTimeAfterDays(int days) {
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DAY_OF_YEAR, days);
-        return String.valueOf((cal.getTimeInMillis())/1000);
+        return String.valueOf((cal.getTimeInMillis()));
     }
 
 

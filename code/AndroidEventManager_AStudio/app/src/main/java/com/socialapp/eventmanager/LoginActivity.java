@@ -229,8 +229,8 @@ public class LoginActivity extends FragmentActivity {
                             Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
 
                             // Delete this later on
-                            Intent intent = new Intent(currContext, MainActivity.class);
-                            startActivity(intent);
+                            //Intent intent = new Intent(currContext, MainActivity.class);
+                            //startActivity(intent);
 
                         }
                     });

@@ -11,7 +11,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
-
 public class ContactSelectorActivity extends ActionBarActivity {
 
     public static final int CONTACT_QUERY_LOADER = 0;

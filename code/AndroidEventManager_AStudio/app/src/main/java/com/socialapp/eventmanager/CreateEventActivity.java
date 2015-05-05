@@ -4,9 +4,11 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.ParcelFileDescriptor;
@@ -23,6 +25,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -38,7 +41,8 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 public class CreateEventActivity extends FragmentActivity {
     private Button startDate;
@@ -54,6 +58,8 @@ public class CreateEventActivity extends FragmentActivity {
     private Switch invitation_allowed_switch;
 
     Calendar start, end;
+
+
 
 
     @Override
@@ -74,6 +80,16 @@ public class CreateEventActivity extends FragmentActivity {
 
         startTime.setText(new SimpleDateFormat("hh:mm aa").format(start.getTime()));
         endTime.setText(new SimpleDateFormat("hh:mm aa").format(end.getTime()));
+
+
+        RelativeLayout rLayout = (RelativeLayout)findViewById (R.id.create_event_relative_layout);
+        Resources res = getResources(); //resource handle
+        Drawable drawable = res.getDrawable(R.drawable.background_createevent3); //new Image that was added to the res folder
+
+        rLayout.setBackground(drawable);
+
+
+
     }
 
     public void onClick(final View v)
@@ -162,10 +178,11 @@ public class CreateEventActivity extends FragmentActivity {
                 startActivityForResult(galleryIntent, RESULT_LOAD_IMG);
             break;
 
-            case R.id.invite_friends_button:
+            /*case R.id.invite_friends_button: {
                 Intent intent = new Intent(this, ContactSelectorActivity.class);
                 startActivity(intent);
-            break;
+            }
+            break;*/
 
             case R.id.create_event_button:
                 final Event event = new Event();
@@ -200,13 +217,19 @@ public class CreateEventActivity extends FragmentActivity {
 
 
                 /////// Date and time
-                event.start_time = start.getTimeInMillis() / 1000;
-                event.end_time = end.getTimeInMillis() / 1000;
+                event.start_time = start.getTimeInMillis();
+                event.end_time = end.getTimeInMillis();
+
+
+
+
 
 
                 // Owner
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                 event.owner= prefs.getString("email", null);
+
+                event.status = "owner";
 
                 if((event.name).matches("")){
                     Toast.makeText(this, "Please insert a name for the event", Toast.LENGTH_SHORT).show();
@@ -219,7 +242,18 @@ public class CreateEventActivity extends FragmentActivity {
                     saveEventToBackend(event);
 
 
-                    super.onBackPressed();
+                    // Call display event to add friends
+
+                    Gson gson = new GsonBuilder().create();
+                    Intent intent = new Intent(this, DisplayEventActivity.class);
+
+                    String eventJSON=gson.toJson(event,Event.class);
+                    intent.putExtra("event", eventJSON);
+                    intent.putExtra("location", "local");
+                    startActivity(intent);
+
+
+                    //super.onBackPressed();
                 }
 
                 break;

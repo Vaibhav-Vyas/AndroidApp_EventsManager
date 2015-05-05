@@ -35,6 +35,7 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
                 return MainFragment.newInstance(3);
             case 3:
                 // Movies fragment activity
+
                 return MainFragment.newInstance(4);
             case 4:
                 // Movies fragment activity
