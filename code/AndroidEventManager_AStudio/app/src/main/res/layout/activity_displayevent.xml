@@ -84,14 +84,55 @@
         android:layout_centerHorizontal="true" />
 
     <Button
-        android:layout_below="@+id/eventImage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Invite Friends"
         android:id="@+id/addFriendsButton"
         android:onClick="add_friends"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="10dp"
-        android:visibility="invisible"/>
+        android:layout_above="@+id/accept"
+        android:layout_toLeftOf="@+id/eventName"
+        android:layout_toStartOf="@+id/eventName" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Accept"
+        android:id="@+id/accept"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:onClick="onClick"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Decline"
+        android:id="@+id/decline"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:onClick="onClick"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="May be"
+        android:id="@+id/maybe"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:onClick="onClick"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Status of Invitees"
+        android:id="@+id/button"
+        android:onClick="show_invitees_status"
+        android:layout_gravity="center_horizontal"
+        android:layout_above="@+id/decline"
+        android:layout_toRightOf="@+id/eventName"
+        android:layout_toEndOf="@+id/eventName"
+        android:nestedScrollingEnabled="false" />
 
 </RelativeLayout>

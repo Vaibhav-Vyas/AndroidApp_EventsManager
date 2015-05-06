@@ -244,13 +244,13 @@ public class CreateEventActivity extends FragmentActivity {
 
                     // Call display event to add friends
 
-                    Gson gson = new GsonBuilder().create();
+                    /*Gson gson = new GsonBuilder().create();
                     Intent intent = new Intent(this, DisplayEventActivity.class);
 
                     String eventJSON=gson.toJson(event,Event.class);
                     intent.putExtra("event", eventJSON);
                     intent.putExtra("location", "local");
-                    startActivity(intent);
+                    startActivity(intent);*/
 
 
                     //super.onBackPressed();
@@ -269,7 +269,7 @@ public class CreateEventActivity extends FragmentActivity {
                     public void run() {
                         try {
                             JSONObject obj = new JSONObject(result);
-                            event.eventId = obj.getString("eventId");
+                            event.event_id = obj.getString("eventId");
                             event.save();
 
                             Toast.makeText(getApplicationContext(), result, Toast.LENGTH_SHORT).show();
@@ -278,7 +278,14 @@ public class CreateEventActivity extends FragmentActivity {
                                 sendEventImageToBackend(event);
                             }
 
-                            addEventToCalender(event);
+                            Gson gson = new GsonBuilder().create();
+                            Intent intent = new Intent(getApplicationContext(), DisplayEventActivity.class);
+                            String eventJSON=gson.toJson(event,Event.class);
+                            intent.putExtra("event", eventJSON);
+                            intent.putExtra("location", "local");
+                            startActivity(intent);
+
+                            //addEventToCalender(event);
                         }
                         catch(Throwable t)
                         {

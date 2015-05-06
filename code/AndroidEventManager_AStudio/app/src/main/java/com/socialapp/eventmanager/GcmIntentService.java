@@ -77,15 +77,15 @@ public class GcmIntentService extends IntentService {
         switch (type)
         {
             case "1":
-                invitedToEvent(msg);
+                invitedToEvent(msg,type);
                 break;
             case "2":
-                responseFromInvitee(msg);
+                responseFromInvitee(msg,type);
         }
 
     }
 
-    private void responseFromInvitee(Bundle msg)
+    private void responseFromInvitee(Bundle msg, String type)
     {
 
         Log.d(TAG, "User accepted your invitation");
@@ -99,7 +99,9 @@ public class GcmIntentService extends IntentService {
         Intent displayActivityIntent = new Intent(this, DisplayEventActivity.class);
         displayActivityIntent.putExtra("eventId", eventId);
         displayActivityIntent.putExtra("location", "server");
-        displayActivityIntent.putExtra("invitedBy", user);
+        displayActivityIntent.putExtra("user_who_responded", user);
+        displayActivityIntent.putExtra("type",type);
+        displayActivityIntent.putExtra("response",response);
 
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0, displayActivityIntent , PendingIntent.FLAG_CANCEL_CURRENT);
 
@@ -119,7 +121,7 @@ public class GcmIntentService extends IntentService {
     }
 
 
-    private void invitedToEvent(Bundle msg)
+    private void invitedToEvent(Bundle msg,String type)
     {
         String invitedBy = msg.getString("invitedBy");
         String eventName = msg.getString("eventName");
@@ -132,6 +134,7 @@ public class GcmIntentService extends IntentService {
         displayActivityIntent.putExtra("eventId", eventId);
         displayActivityIntent.putExtra("location", "server");
         displayActivityIntent.putExtra("invitedBy", invitedBy);
+        displayActivityIntent.putExtra("type",type);
 
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0, displayActivityIntent , PendingIntent.FLAG_CANCEL_CURRENT);
 

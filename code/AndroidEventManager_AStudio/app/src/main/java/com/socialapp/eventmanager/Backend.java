@@ -147,7 +147,30 @@ public class Backend {
         return errorMessage;
     }
 
+    public static void respondToInvite(String email, String eventId, String response, final BackendCallback callback)
+    {
+        AsyncHttpClient client = new AsyncHttpClient(SERVER_URL);
+        List<Header> headers = new ArrayList<Header>();
+        headers.add(new BasicHeader("Accept", "application/json"));
+        headers.add(new BasicHeader("Content-Type", "application/json"));
 
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        params.add(new BasicNameValuePair("email",email));
+        params.add(new BasicNameValuePair("eventId", eventId));
+        params.add(new BasicNameValuePair("status", response));
+
+        client.get("events/respond.json", params, headers, new JsonResponseHandler() {
+            @Override public void onSuccess() {
+                JsonObject result = getContent().getAsJsonObject();
+                callback.onRequestCompleted(result.toString());
+            }
+
+            @Override
+            public void onFailure() {
+                callback.onRequestFailed(handleFailure(getContent()));
+            }
+        });
+    }
 
 
 
@@ -289,7 +312,7 @@ public class Backend {
 
         RequestParams params = new RequestParams();
         params.put("email",event.owner);
-        params.put("eventId", event.eventId);
+        params.put("eventId", event.event_id);
         params.put("image", event.image_url);
 
         try {
@@ -365,7 +388,7 @@ public class Backend {
 
         List<NameValuePair> params = new ArrayList<NameValuePair>();
         params.add(new BasicNameValuePair("email",event.owner));
-        params.add(new BasicNameValuePair("eventId",event.eventId));
+        params.add(new BasicNameValuePair("eventId",event.event_id));
         params.add(new BasicNameValuePair("list",friends_to_invite));
 
         client.get("/events/invite", params, headers, new JsonResponseHandler() {
