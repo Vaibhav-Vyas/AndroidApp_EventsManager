@@ -196,28 +196,25 @@ public class MainFragment extends Fragment {
 
         switch (section_number){
             case 1: // Today
-                queryargs = new String[3];
+                queryargs = new String[2];
                 queryargs[0]= getTimeAfterDays(0);
                 queryargs[1]= getTimeAfterDays(1);
-                queryargs[2] = owner;
                 Log.d("Sujith", " Section 1: Finding events between = " + queryargs[0] + " and " + queryargs[1]);
-                events = Event.find(Event.class, "startTime BETWEEN ? AND ? and owner = ?", queryargs, null, "startTime",null);
+                events = Event.find(Event.class, "startTime BETWEEN ? AND ?", queryargs, null, "startTime",null);
                 break;
             case 2: // This week
-                queryargs = new String[3];
+                queryargs = new String[2];
                 queryargs[0]=getTimeAfterDays(1);
                 queryargs[1]=getTimeAfterDays(7);
-                queryargs[2] = owner;
                 Log.d("Sujith", " Section 2: Finding events between = " + queryargs[0] + " and " + queryargs[1]);
-                events = Event.find(Event.class, "startTime BETWEEN ? AND ? and owner = ?", queryargs, null, "startTime",null);
+                events = Event.find(Event.class, "startTime BETWEEN ? AND ?", queryargs, null, "startTime",null);
                 break;
             case 3: // This month
-                queryargs = new String[3];
+                queryargs = new String[2];
                 queryargs[0]=getTimeAfterDays(7);
                 queryargs[1]=getTimeAfterDays(30);
-                queryargs[2] = owner;
                 Log.d("Sujith", " Section 3: Finding events between = " + queryargs[0] + " and " + queryargs[1]);
-                events = Event.find(Event.class, "startTime BETWEEN ? AND ? and owner = ?", queryargs, null, "startTime",null);
+                events = Event.find(Event.class, "startTime BETWEEN ? AND ?", queryargs, null, "startTime",null);
                 break;
             case 4: // Created Events
                 queryargs = new String[2];

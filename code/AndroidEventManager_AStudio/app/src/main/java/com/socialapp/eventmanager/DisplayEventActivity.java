@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -25,6 +26,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -51,6 +53,7 @@ public class DisplayEventActivity extends ActionBarActivity {
     Button declineButton;
     Button maybeButton;
     Button addFriendsButton;
+    Button inviteeStatusButton;
 
 
 
@@ -61,6 +64,12 @@ public class DisplayEventActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_displayevent);
+
+        RelativeLayout rLayout = (RelativeLayout)findViewById (R.id.display_event_relative_layout);
+        Resources res = getResources(); //resource handle
+        Drawable drawable = res.getDrawable(R.drawable.background_displayevent); //new Image that was added to the res folder
+
+        rLayout.setBackground(drawable);
 
         String location = getIntent().getStringExtra("location");
         String type = getIntent().getStringExtra("type");
@@ -98,6 +107,7 @@ public class DisplayEventActivity extends ActionBarActivity {
                             event.start_time = Long.parseLong(obj.getString("startTime"));
                             event.end_time = Long.parseLong(obj.getString("endTime"));
                             event.organization = obj.getString("organization");
+                            event.status = "invited";
                             Log.d(TAG, "Image url: " + event.image_url);
                             if (event.image_url != "") {
                                 saveImageToGallery(event);
@@ -243,6 +253,7 @@ public class DisplayEventActivity extends ActionBarActivity {
         declineButton = (Button)findViewById(R.id.decline);
         maybeButton = (Button)findViewById(R.id.maybe);
         addFriendsButton = (Button)findViewById(R.id.addFriendsButton);
+        inviteeStatusButton = (Button)findViewById(R.id.invitee_status_button);
 
         String user = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("email", null);
         if (event.owner.equals(user))
@@ -254,6 +265,7 @@ public class DisplayEventActivity extends ActionBarActivity {
         else
         {
             addFriendsButton.setVisibility(View.INVISIBLE);
+            inviteeStatusButton.setVisibility(View.INVISIBLE);
         }
 
     }
@@ -264,14 +276,18 @@ public class DisplayEventActivity extends ActionBarActivity {
         switch (v.getId()) {
             case R.id.accept:
                 response = "accepted";
+                event.status = response;
                 break;
             case R.id.decline:
                 response = "declined";
+                event.status = response;
                 break;
             case R.id.maybe:
                 response = "undecided";
                 break;
         }
+
+
 
         Backend.respondToInvite(email, event.event_id, response, new Backend.BackendCallback() {
             @Override
