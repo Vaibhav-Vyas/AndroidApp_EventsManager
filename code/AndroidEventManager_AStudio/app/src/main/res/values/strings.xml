@@ -17,6 +17,7 @@
     <string name="action_settings">Settings</string>
     <string name="action_about_us">About Us</string>
     <string name="action_rate_app">Rate App</string>
+    <string name="action_logout">Logout</string>
     <string name="drawer_open">open</string>
     <string name="drawer_close">closed</string>
 

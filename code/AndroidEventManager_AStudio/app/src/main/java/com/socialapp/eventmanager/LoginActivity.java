@@ -156,6 +156,14 @@ public class LoginActivity extends FragmentActivity {
         });
 
         accessTokenTracker.startTracking();
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        String userLoggedIn = prefs.getString("email", null);
+        if(userLoggedIn != null)
+        {
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+        }
     }
 
 /*

@@ -474,7 +474,6 @@ public class MainActivity extends ActionBarActivity
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
         if (drawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
@@ -483,6 +482,15 @@ public class MainActivity extends ActionBarActivity
         }
         else if(id == R.id.action_add)  {
             Intent intent = new Intent(this, CreateEventActivity.class);
+            startActivity(intent);
+        }
+        else if(id == R.id.action_logout)
+        {
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.clear();
+            editor.commit();
+            Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
         }
 
