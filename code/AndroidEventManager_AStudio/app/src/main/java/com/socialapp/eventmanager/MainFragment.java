@@ -5,11 +5,11 @@ package com.socialapp.eventmanager;
  */
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -18,39 +18,59 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.socialapp.eventmanager.Models.Event;
 
-import java.text.SimpleDateFormat;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Random;
 
-/**
- * A placeholder fragment containing a simple view.
- */
 public class MainFragment extends Fragment {
-    /**
-     * The fragment argument representing the section number for this
-     * fragment.
-     */
 
-    private LayoutInflater layout_inflater;
-    private int section_number;
+    public class EventsAdapter extends ArrayAdapter<Event> {
+        public EventsAdapter(Context context, List<Event> events) {
+            super(context, 0, events);
+        }
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            Event event = getItem(position);
+            if (convertView == null) {
+                convertView = LayoutInflater.from(getContext()).inflate(R.layout.event_item, parent, false);
+            }
+            ImageView imageView = (ImageView) convertView.findViewById(R.id.eventImage);
+            TextView eventTitle = (TextView) convertView.findViewById(R.id.eventName);
+            TextView eventDescription = (TextView) convertView.findViewById(R.id.event_description);
 
+            if(event.image_url != null && !event.image_url.equals("")) {
+                imageView.setImageBitmap(BitmapFactory.decodeFile(event.image_url));
+            }
+            else {
+                imageView.setImageResource(R.drawable.event_pic);
+            }
 
+            eventTitle.setText(event.name);
+            eventDescription.setText(event.description);
+            return convertView;
+        }
+    }
 
+    private int fragmentNumber;
     private static final String ARG_SECTION_NUMBER = "section_number";
-    View rootView;
-    /**
-     * Returns a new instance of this fragment for the given section
-     * number.
-     */
+    private static final String TAG = "MainFragment";
+    private List<Event> events;
+    EventsAdapter adapter;
+
+    public MainFragment() { }
+
+    // Returns a new instance of this fragment for the given section number.
     public static MainFragment newInstance(int sectionNumber) {
         MainFragment fragment = new MainFragment();
         Bundle args = new Bundle();
@@ -59,274 +79,108 @@ public class MainFragment extends Fragment {
         return fragment;
     }
 
-    public MainFragment() {
-    }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+        //RelativeLayout rLayout = (RelativeLayout) rootView.findViewById (R.id.main_fragment_relative_layout);
 
-        layout_inflater = inflater;
-        rootView = inflater.inflate(R.layout.fragment_main, container, false);
+        // Background image
+        //Resources res = getResources(); //resource handle
+        //Drawable drawable = res.getDrawable(R.drawable.background_main); //new Image that was added to the res folder
+        //rLayout.setBackground(drawable);
 
+        fragmentNumber = getArguments().getInt(ARG_SECTION_NUMBER);
 
-        RelativeLayout rLayout = (RelativeLayout) rootView.findViewById (R.id.main_fragment_relative_layout);
-        Resources res = getResources(); //resource handle
-        Drawable drawable = res.getDrawable(R.drawable.background_main); //new Image that was added to the res folder
+        events = new ArrayList<Event>();
 
-        rLayout.setBackground(drawable);
+        ///////////////////////////Events List//////////////////////////////
 
-
-        TextView tv = (TextView)rootView.findViewById(R.id.heading);
-        tv.setText("Fragment Number : " + getArguments().getInt(ARG_SECTION_NUMBER));
-        section_number = getArguments().getInt(ARG_SECTION_NUMBER);
-
-        /*
-        final LinearLayout eventContainer = (LinearLayout) rootView.findViewById(R.id.eventContainer);
-
-        //final List<Event> events = Event.findWithQuery(Event.class, "Select * from Event ORDER BY startTime");
-        //final List<Event> events = Event.find(Event.class, "startTime > 0", null, null, "startTime",null);
-
-        ////////////////////////////////////////////////////////////////////////////////////
-        final List<Event> events;
-
-        Calendar calendar1 = Calendar.getInstance();
-        long current_time = calendar1.getTimeInMillis()/1000;
-        String[] queryargs;
-
-        //Log.d("Sujith", "current time string = " + queryargs[0]);
-
-
-        switch (section_number){
-            case 1: // Today
-                queryargs = new String[2];
-                queryargs[0]= getTimeAfterDays(0);
-                queryargs[1]= getTimeAfterDays(1);
-                events = Event.find(Event.class, "startTime BETWEEN ? AND ?", queryargs, null, "startTime",null);
-                break;
-            case 2: // This week
-                queryargs = new String[2];
-                queryargs[0]=getTimeAfterDays(0);
-                queryargs[1]=getTimeAfterDays(7);
-                events = Event.find(Event.class, "startTime BETWEEN ? AND ?", queryargs, null, "startTime",null);
-                break;
-            case 3: // This month
-                queryargs = new String[2];
-                queryargs[0]=getTimeAfterDays(0);
-                queryargs[1]=getTimeAfterDays(30);
-                events = Event.find(Event.class, "startTime BETWEEN ? AND ?", queryargs, null, "startTime",null);
-                break;
-            case 4: // UW
-                events = Event.find(Event.class, "organization = UW", null, null, "startTime",null);
-                break;
-            default: // All events
-                events = Event.find(Event.class, "startTime > 0", null, null, "startTime",null);
-                break;
-        }
-
-        ///////////////////////////////////////////////////////////////////////////////////////
-
-
-
-
-        for (int i = 0; i < events.size(); i++) {
-            Event currEvent = events.get(i);
-            View eventItem = inflater.inflate(R.layout.event_item, null);
-
-            eventItem.setOnClickListener(new View.OnClickListener(){
-                @Override
-                public void onClick(View v) {
-                    int index=((ViewGroup)v.getParent()).indexOfChild(v);
-                    Event selectedEvent=events.get(index);
-
-                    Gson gson=new Gson();
-                    String eventJSON=gson.toJson(selectedEvent,Event.class);
-
-                    Intent newActivity=new Intent(getActivity(),DisplayEventActivity.class);
-                    newActivity.putExtra("event",eventJSON);
-                    startActivity(newActivity);
-
-                }
-            });
-
-            Random rnd = new Random();
-            int color = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
-
-            View view = eventItem.findViewById(R.id.tempRel);
-            view.setBackgroundColor(color);
-
-
-            TextView eventNameText = (TextView) eventItem.findViewById(R.id.eventName);
-            eventNameText.setText(currEvent.name);
-
-            TextView eventLocationText =
-                    (TextView) eventItem.findViewById(R.id.textview1);
-            eventLocationText.setText(currEvent.location);
-
-            ImageView iv= (ImageView)eventItem.findViewById(R.id.eventImage);
-            iv.setImageResource(R.drawable.event_pic);
-
-            eventContainer.addView(eventItem);
-        }
-        */
+        ListView eventContainer = (ListView) rootView.findViewById(R.id.event_list);
+        adapter = new EventsAdapter(getActivity(), events);
+        eventContainer.setAdapter(adapter);
+        eventContainer.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Event selectedEvent = events.get(position);
+                String eventJSON = (new Gson()).toJson(selectedEvent, Event.class);
+                Intent newActivity = new Intent(getActivity(), DisplayEventActivity.class);
+                newActivity.putExtra("event", eventJSON);
+                newActivity.putExtra("location", "local");
+                startActivity(newActivity);
+            }
+        });
         return rootView;
     }
 
-
     @Override
-    public void onResume(){
+    public void onResume()
+    {
         super.onResume();
+        int status = ((MainActivity)getActivity()).status;
+        updateEventsList(status);
+    }
 
-        final LinearLayout eventContainer = (LinearLayout) rootView.findViewById(R.id.eventContainer);
-        eventContainer.removeAllViews();
+    public void updateEventsList(int status){
+        String owner= PreferenceManager.getDefaultSharedPreferences(this.getActivity()).getString("email", null);
+        ArrayList<String> queryargs = new ArrayList<String>();
 
-        //final List<Event> events = Event.findWithQuery(Event.class, "Select * from Event ORDER BY startTime");
-        //final List<Event> events = Event.find(Event.class, "startTime > 0", null, null, "startTime",null);
-
-        ////////////////////////////////////////////////////////////////////////////////////
-        final List<Event> events;
-
-        Calendar calendar1 = Calendar.getInstance();
-        long current_time = calendar1.getTimeInMillis()/1000;
-        String[] queryargs;
-
-        //Log.d("Sujith", "current time string = " + queryargs[0]);
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this.getActivity());
-        String owner= prefs.getString("email", null);
-
-        switch (section_number){
-            case 1: // Today
-                queryargs = new String[2];
-                queryargs[0]= getTimeAfterDays(0);
-                queryargs[1]= getTimeAfterDays(1);
-                Log.d("Sujith", " Section 1: Finding events between = " + queryargs[0] + " and " + queryargs[1]);
-                events = Event.find(Event.class, "startTime BETWEEN ? AND ?", queryargs, null, "startTime",null);
+        switch (fragmentNumber)
+        {
+            case 0:
+                queryargs.add(getTimeAfterDays(0));
+                queryargs.add(getTimeAfterDays(1));
                 break;
-            case 2: // This week
-                queryargs = new String[2];
-                queryargs[0]=getTimeAfterDays(1);
-                queryargs[1]=getTimeAfterDays(7);
-                Log.d("Sujith", " Section 2: Finding events between = " + queryargs[0] + " and " + queryargs[1]);
-                events = Event.find(Event.class, "startTime BETWEEN ? AND ?", queryargs, null, "startTime",null);
+            case 1:
+                queryargs.add(getTimeAfterDays(1));
+                queryargs.add(getTimeAfterDays(7));
                 break;
-            case 3: // This month
-                queryargs = new String[2];
-                queryargs[0]=getTimeAfterDays(7);
-                queryargs[1]=getTimeAfterDays(30);
-                Log.d("Sujith", " Section 3: Finding events between = " + queryargs[0] + " and " + queryargs[1]);
-                events = Event.find(Event.class, "startTime BETWEEN ? AND ?", queryargs, null, "startTime",null);
+            case 2:
+                queryargs.add(getTimeAfterDays(7));
+                queryargs.add(getTimeAfterDays(30));
                 break;
-            case 4: // Created Events
-                queryargs = new String[2];
-                queryargs[0]=getTimeAfterDays(0);
-                queryargs[1] = "owner";
-                events = Event.find(Event.class, "startTime > ? and status = ?", queryargs, null, "startTime",null);
+        }
+        switch (status)
+        {
+            case 0:
+                queryargs.add("owner");
                 break;
-
-            case 5: // Accepted Events
-                queryargs = new String[2];
-                queryargs[0]=getTimeAfterDays(0);
-                queryargs[1] = "accepted";
-                events = Event.find(Event.class, "startTime > ? and status = ?", queryargs, null, "startTime",null);
+            case 1:
+                queryargs.add("accepted");
                 break;
-            case 6: // Invited Events
-                queryargs = new String[2];
-                queryargs[0]=getTimeAfterDays(0);
-                queryargs[1] = "invited";
-                events = Event.find(Event.class, "startTime > ? and status = ?", queryargs, null, "startTime",null);
+            case 2:
+                queryargs.add("invited");
                 break;
-            case 7: // Declined Events
-                queryargs = new String[2];
-                queryargs[0]=getTimeAfterDays(0);
-                queryargs[1] = "declined";
-                events = Event.find(Event.class, "startTime > ? and status = ?", queryargs, null, "startTime",null);
-                break;
-            default: // All events
-                //events = Event.find(Event.class, "startTime > 0", null, null, "startTime",null);
-                events = Event.listAll(Event.class);
+            case 3:
+                queryargs.add("declined");
                 break;
         }
 
-        ///////////////////////////////////////////////////////////////////////////////////////
-
-
-
-
-        for (int i = 0; i < events.size(); i++) {
-            Event currEvent = events.get(i);
-            View eventItem = layout_inflater.inflate(R.layout.event_item, null);
-
-            eventItem.setOnClickListener(new View.OnClickListener(){
-                @Override
-                public void onClick(View v) {
-                    int index=((ViewGroup)v.getParent()).indexOfChild(v);
-                    Event selectedEvent=events.get(index);
-
-                    Gson gson=new Gson();
-                    String eventJSON=gson.toJson(selectedEvent,Event.class);
-
-                    Intent newActivity=new Intent(getActivity(),DisplayEventActivity.class);
-                    newActivity.putExtra("event", eventJSON);
-                    newActivity.putExtra("location", "local");
-                    startActivity(newActivity);
-
-                }
-            });
-
-            Random rnd = new Random();
-            int transparency = 160;
-            int color = Color.argb(transparency, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
-
-            View view = eventItem.findViewById(R.id.tempRel);
-            view.setBackgroundColor(color);
-
-
-            TextView eventNameText = (TextView) eventItem.findViewById(R.id.eventName);
-            eventNameText.setText(currEvent.name);
-
-            TextView eventLocationText =
-                    (TextView) eventItem.findViewById(R.id.textview1);
-            eventLocationText.setText(currEvent.location);
-
-            ImageView iv= (ImageView)eventItem.findViewById(R.id.eventImage);
-
-            if(currEvent.image_url != null && !currEvent.image_url.equals(""))
-            {
-                iv.setImageBitmap(BitmapFactory.decodeFile(currEvent.image_url));
-            }
-            else
-            {
-                iv.setImageResource(R.drawable.event_pic);
-            }
-
-
-            eventContainer.addView(eventItem);
+        List<Event> updatedEvents = null;
+        if(fragmentNumber <= 2 && status <= 3)
+        {
+            updatedEvents = Event.find(Event.class, "startTime BETWEEN ? AND ? AND status = ?", queryargs.toArray(new String[queryargs.size()]), null, "startTime",null);
         }
-
+        else if(fragmentNumber > 2 && status <= 3)
+        {
+            updatedEvents = Event.find(Event.class, "status = ?", queryargs.toArray(new String[queryargs.size()]), null, "startTime",null);
+        }
+        else if(fragmentNumber <= 2 && status > 3)
+        {
+            updatedEvents = Event.find(Event.class, "startTime BETWEEN ? AND ?", queryargs.toArray(new String[queryargs.size()]), null, "startTime",null);
+        }
+        else if(fragmentNumber > 2 && status > 3)
+        {
+            updatedEvents = Event.listAll(Event.class);
+        }
+        events.clear();
+        events.addAll(updatedEvents);
+        adapter.notifyDataSetChanged();
     }
-
-
-    @Override
-    public void onStart() {
-        Log.d("Sujith", "Called onStart on the MainFragment");
-        super.onStart();
-    }
-
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        ((MainActivity) activity).onSectionAttached(
-                getArguments().getInt(ARG_SECTION_NUMBER));
-    }
-
 
     public static String getTimeAfterDays(int days) {
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DAY_OF_YEAR, days);
         return String.valueOf((cal.getTimeInMillis()));
     }
-
-
-
 }

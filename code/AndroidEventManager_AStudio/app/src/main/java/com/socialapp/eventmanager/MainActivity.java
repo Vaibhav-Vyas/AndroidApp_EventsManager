@@ -6,6 +6,8 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.support.v4.view.ViewPager;
@@ -27,13 +29,12 @@ import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.HorizontalScrollView;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.support.v4.view.ViewPager;
-
-//import android.support.v7.app.ActionBar;
-
-
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -62,16 +63,19 @@ public class MainActivity extends ActionBarActivity
     private ViewPager viewPager;
     private TabsPagerAdapter mAdapter;
     private ActionBar actionBar;
-    private String[] tabs = { "Today", "This Week", "This Month" };
+    private String[] tabs = { "Today", "This Week", "This Month", "Later" };
 
     private static final String TAG = "Sujith";
 
+    private HorizontalScrollView imageScrollView;
     final String drawerTitle = "Navigation";
     DrawerLayout drawerLayout;
     ActionBarDrawerToggle drawerToggle;
     String[] fragmentNames;
     ListView drawerList;
-    int fragPos=0;
+    public int tabPos = 0;
+    public int status = 0;
+
 
 
 
@@ -81,10 +85,8 @@ public class MainActivity extends ActionBarActivity
     //private NavigationDrawerFragment mNavigationDrawerFragment;
 
     /**
-     * Used to store the last screen title. For use in {@link #restoreActionBar()}.
+     * Used to store the last screen title. For use in {@link =restoreActionBar()}.
      */
-    private CharSequence mTitle;
-
     private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     public static final String EXTRA_MESSAGE = "message";
     public static final String PROPERTY_REG_ID = "registration_id";
@@ -116,6 +118,8 @@ public class MainActivity extends ActionBarActivity
             Log.i(TAG, "No valid Google Play Services APK found.");
         }
 
+        imageScrollView = (HorizontalScrollView)findViewById (R.id.image_scrollView);
+
 
         ////////////////////////////////////////////////////////////////////////////
         ////////////////////////// DRAWER //////////////////////////////////////////
@@ -145,6 +149,7 @@ public class MainActivity extends ActionBarActivity
         drawerList = (ListView) findViewById(R.id.left_drawer);
         drawerList.setAdapter(new ArrayAdapter<String>(this,
                 R.layout.drawer_list_item, fragmentNames));
+        drawerList.setItemChecked(4, true);
         drawerList.setOnItemClickListener(this);
 
 
@@ -165,17 +170,11 @@ public class MainActivity extends ActionBarActivity
                     .setTabListener(this));
         }
 
-        /**
-         * on swiping the viewpager make respective tab selected
-         * */
+        // On swiping the viewpager make respective tab selected
         viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-
             @Override
             public void onPageSelected(int position) {
-                // on changing the page
-                // make respected tab selected
-                Log.d(TAG, "Called onPageSelected with position = " + position);
-//                getSupportActionBar().setSelectedNavigationItem(position); --> Crashing with out of bounds exception
+                getSupportActionBar().setSelectedNavigationItem(position);
             }
 
             @Override
@@ -364,10 +363,10 @@ public class MainActivity extends ActionBarActivity
 
     @Override
     public void onTabSelected(Tab tab, FragmentTransaction ft) {
-        // on tab selected
-        // show respected fragment view
-        Log.d(TAG, "Called onTabSelected with position = " + tab.getPosition());
         viewPager.setCurrentItem(tab.getPosition());
+        int newPos = tab.getPosition();
+        imageScrollView.smoothScrollBy(250 * (newPos - tabPos), 0);
+        tabPos = newPos;
     }
 
     @Override
@@ -387,78 +386,13 @@ public class MainActivity extends ActionBarActivity
         drawerToggle.onConfigurationChanged(newConfig);
     }
 
-
     @Override
     public void onItemClick(AdapterView parent, View view, int position, long id) {
-        Log.d(TAG, "Called onItemClicked with position = " + position);
-        switch(position){
-
-            case 0:
-                //switching the fragment
-                viewPager.setCurrentItem(3);
-                break;
-            case 1:
-                viewPager.setCurrentItem(4);
-                break;
-            case 2:
-                viewPager.setCurrentItem(5);
-                break;
-            case 3:
-                viewPager.setCurrentItem(6);
-                break;
-            case 4:
-                viewPager.setCurrentItem(7);
-                break;
-            case 5:
-                viewPager.setCurrentItem(8);
-                break;
-            case 6:
-                viewPager.setCurrentItem(9);
-                break;
-            default:
-                viewPager.setCurrentItem(1);
-                break;
-        }
-        fragPos=position;
+        MainFragment currFrag = ((TabsPagerAdapter) viewPager.getAdapter()).getFragment(getSupportActionBar().getSelectedTab().getPosition());
+        currFrag.updateEventsList(position);
+        status = position;
         drawerLayout.closeDrawer(drawerList);
     }
-
-    public void onSectionAttached(int number) {
-        switch (number) {
-            case 1:
-                mTitle = getString(R.string.title_section1);
-                break;
-            case 2:
-                mTitle = getString(R.string.title_section2);
-                break;
-            case 3:
-                mTitle = getString(R.string.title_section3);
-                break;
-            case 4:
-                mTitle = getString(R.string.title_section4);
-                break;
-            case 5:
-                mTitle = getString(R.string.title_section5);
-                break;
-            case 6:
-                mTitle = getString(R.string.title_section6);
-                break;
-            case 7:
-                mTitle = getString(R.string.title_section7);
-                break;
-            case 8:
-                mTitle = getString(R.string.title_section8);
-                break;
-        }
-    }
-
-    public void restoreActionBar() {
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-        actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setTitle(mTitle);
-    }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -493,13 +427,6 @@ public class MainActivity extends ActionBarActivity
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
         }
-
         return super.onOptionsItemSelected(item);
     }
-
-
-
-
-
-
 }

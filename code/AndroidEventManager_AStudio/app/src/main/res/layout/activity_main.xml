@@ -6,11 +6,24 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <HorizontalScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:id="@+id/image_scrollView">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:adjustViewBounds="true"
+            android:scrollbars="horizontal"
+            android:src="@drawable/background_main2"
+            android:scaleType="fitXY"
+            android:layout_height="match_parent" />
+    </HorizontalScrollView>
+
     <android.support.v4.view.ViewPager
         android:id="@+id/pager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
-    </android.support.v4.view.ViewPager>
+        android:layout_height="match_parent"/>
 
     <!-- The navigation drawer -->
     <ListView android:id="@+id/left_drawer"
