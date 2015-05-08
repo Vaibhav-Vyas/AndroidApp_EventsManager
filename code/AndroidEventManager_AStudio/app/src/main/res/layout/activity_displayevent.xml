@@ -1,88 +1,135 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:layout_height="match_parent"
     android:id="@+id/display_event_relative_layout"
-    tools:context="com.socialapp.eventmanager.DisplayEventActivity">
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:id="@+id/eventName"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Location"
-        android:id="@+id/textview1"
-        android:layout_below="@+id/eventName"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="58dp"
-        android:textColor="#ffff5020" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Medium Text"
-        android:id="@+id/eventLocation"
-        android:layout_above="@+id/textView4"
-        android:layout_alignLeft="@+id/eventStartTime"
-        android:layout_alignStart="@+id/eventStartTime" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Start Time"
-        android:id="@+id/textView4"
-        android:layout_below="@+id/textview1"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:textColor="#ffff5020" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Medium Text"
-        android:id="@+id/eventStartTime"
-        android:layout_above="@+id/eventImage"
-        android:layout_alignLeft="@+id/eventEndTime"
-        android:layout_alignStart="@+id/eventEndTime" />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="End Time"
-        android:id="@+id/textView6"
-        android:layout_below="@+id/textView4"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:textColor="#ffff5020" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Medium Text"
-        android:id="@+id/eventEndTime"
-        android:layout_below="@+id/eventLocation"
-        android:layout_centerHorizontal="true" />
+    tools:context="com.socialapp.eventmanager.DisplayEventActivity"
+    android:padding="5dp">
 
     <ImageView
-        android:layout_below="@+id/textView6"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
         android:id="@+id/eventImage"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:src="@drawable/event_pic"
+        android:scaleType="centerCrop"/>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:background="@drawable/image_gradient"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="Event Name"
+        android:id="@+id/eventName"
+        android:textSize="24dp"
+        android:textColor="@color/bright_foreground_inverse_material_light"
+        android:layout_alignBottom="@+id/eventImage"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:padding="5dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Start: "
+        android:id="@+id/textView1"
+        android:layout_below="@+id/eventImage"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:padding="5dp"
+        android:textSize="15dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="Start_time"
+        android:id="@+id/eventStartTime"
+        android:padding="5dp"
+        android:textSize="15dp"
+        android:layout_below="@+id/eventImage"
+        android:layout_toRightOf="@+id/textView1"
+        android:layout_toEndOf="@+id/textView1" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="End: "
+        android:id="@+id/textView2"
+        android:padding="5dp"
+        android:textSize="15dp"
+        android:layout_below="@+id/textView1"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="End_time"
+        android:id="@+id/eventEndTime"
+        android:padding="5dp"
+        android:textSize="15dp"
+        android:layout_alignTop="@+id/textView2"
+        android:layout_toRightOf="@+id/textView1"
+        android:layout_toEndOf="@+id/textView2" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/textView2"
+        android:background="@android:color/darker_gray"
+        android:id="@+id/view" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/view"
+        android:id="@+id/locationLayout"
+        android:onClick="locationClicked">
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:id="@+id/imageView"
+
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:src="@drawable/location_icon"
+            android:layout_margin="20dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Where"
+            android:id="@+id/textView"
+            android:layout_toRightOf="@+id/imageView"
+            android:layout_toEndOf="@+id/imageView"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="16dp"
+            android:textSize="18dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="Event Location"
+            android:id="@+id/eventLocation"
+            android:layout_below="@+id/textView"
+            android:layout_alignLeft="@+id/textView"
+            android:layout_alignStart="@+id/textView"
+            android:textSize="15dp" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/locationLayout"
+        android:background="@android:color/darker_gray"
+        android:id="@+id/view2" />
 
     <Button
         android:layout_width="wrap_content"
@@ -131,9 +178,8 @@
         android:id="@+id/invitee_status_button"
         android:onClick="show_invitees_status"
         android:layout_gravity="center_horizontal"
+        android:nestedScrollingEnabled="false"
         android:layout_above="@+id/decline"
-        android:layout_toRightOf="@+id/eventName"
-        android:layout_toEndOf="@+id/eventName"
-        android:nestedScrollingEnabled="false" />
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>

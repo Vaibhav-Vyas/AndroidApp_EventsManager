@@ -2,6 +2,7 @@ package com.socialapp.eventmanager;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
@@ -39,24 +40,22 @@ import org.json.JSONObject;
 
 import java.io.InputStream;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 
 
 public class DisplayEventActivity extends ActionBarActivity {
 
     Event event;
-
     Button acceptButton;
     Button declineButton;
     Button maybeButton;
     Button addFriendsButton;
     Button inviteeStatusButton;
-
-
-
 
     private static final String TAG = "DisplayEventActivity";
 
@@ -68,12 +67,16 @@ public class DisplayEventActivity extends ActionBarActivity {
         RelativeLayout rLayout = (RelativeLayout)findViewById (R.id.display_event_relative_layout);
         Resources res = getResources(); //resource handle
         Drawable drawable = res.getDrawable(R.drawable.background_displayevent); //new Image that was added to the res folder
-
         rLayout.setBackground(drawable);
+
+        acceptButton = (Button)findViewById(R.id.accept);
+        declineButton = (Button)findViewById(R.id.decline);
+        maybeButton = (Button)findViewById(R.id.maybe);
+        addFriendsButton = (Button)findViewById(R.id.addFriendsButton);
+        inviteeStatusButton = (Button)findViewById(R.id.invitee_status_button);
 
         String location = getIntent().getStringExtra("location");
         String type = getIntent().getStringExtra("type");
-
         Log.d(TAG, "location : " + location);
 
         if (location.equals("local")) {
@@ -81,16 +84,10 @@ public class DisplayEventActivity extends ActionBarActivity {
             event = gson.fromJson(getIntent().getStringExtra("event"), Event.class);
             showEventOnUI(true);
         } else if (location.equals("server")) {
-
             if(type.equals("1")) {
-
-
-
                 event = new Event();
-
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                 String email = prefs.getString("email", null);
-
                 event.event_id = getIntent().getStringExtra("eventId");
 
                 Backend.getEventFromServer(event.event_id, email, new Backend.BackendCallback() {
@@ -171,8 +168,6 @@ public class DisplayEventActivity extends ActionBarActivity {
 
 
     public void show_invitees_status(View view){
-
-
         LayoutInflater inflater = getLayoutInflater();
 
         LinearLayout myRoot = new LinearLayout(this);
@@ -198,9 +193,6 @@ public class DisplayEventActivity extends ActionBarActivity {
 
             inviteeContainer.addView(inviteeItem);
         }
-
-
-
         final Dialog dialog = new Dialog(this);
         dialog.setContentView(myRoot);
         dialog.setTitle("Status of Friends");
@@ -220,55 +212,44 @@ public class DisplayEventActivity extends ActionBarActivity {
 
         tv = (TextView)findViewById(R.id.eventStartTime);
         cl.setTimeInMillis((event.start_time));
-        String date = "" + cl.get(Calendar.DAY_OF_MONTH) + "/" + cl.get(Calendar.MONTH) + "/" + cl.get(Calendar.YEAR);
-        String time = "" + cl.get(Calendar.HOUR_OF_DAY) + ":" + cl.get(Calendar.MINUTE);
-        tv.setText(date + " , " + time);
+        String date = new SimpleDateFormat("MM/dd/yyyy").format(cl.getTime());
+        String time = new SimpleDateFormat("hh:mm aa").format(cl.getTime());
+        tv.setText(date + "    " + time);
 
         tv = (TextView)findViewById(R.id.eventEndTime);
         cl.setTimeInMillis((event.end_time));
-        date = "" + cl.get(Calendar.DAY_OF_MONTH) + "/" + cl.get(Calendar.MONTH) + "/" + cl.get(Calendar.YEAR);
-        time = "" + cl.get(Calendar.HOUR_OF_DAY) + ":" + cl.get(Calendar.MINUTE);
-        tv.setText(date + " , " + time);
+        date = new SimpleDateFormat("MM/dd/yyyy").format(cl.getTime());
+        time = new SimpleDateFormat("hh:mm aa").format(cl.getTime());
+        tv.setText(date + "    " + time);
 
         ImageView iv = (ImageView) findViewById(R.id.eventImage);
-        if(event.image_url != "") {
+        if(event.image_url != null && event.image_url != "") {
             Log.d(TAG, "Showing image :" + event.image_url);
             iv.setImageBitmap(BitmapFactory.decodeFile(event.image_url));
             Log.d(TAG, "Image showed");
-        }else
-        {
-            iv.setImageResource(R.drawable.event_pic);
         }
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         String this_user= prefs.getString("email", null);
         if((event.owner).equals(this_user)){
             Log.d(TAG, "Owner = this user");
-            Button add_friends_button = (Button)findViewById(R.id.addFriendsButton);
-            add_friends_button.setVisibility(View.VISIBLE);
-        }else{
-            Log.d(TAG, "Owner = not this user" + event.owner + "," + this_user);
-        }
-        acceptButton = (Button)findViewById(R.id.accept);
-        declineButton = (Button)findViewById(R.id.decline);
-        maybeButton = (Button)findViewById(R.id.maybe);
-        addFriendsButton = (Button)findViewById(R.id.addFriendsButton);
-        inviteeStatusButton = (Button)findViewById(R.id.invitee_status_button);
-
-        String user = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("email", null);
-        if (event.owner.equals(user))
-        {
             acceptButton.setVisibility(View.INVISIBLE);
             declineButton.setVisibility(View.INVISIBLE);
             maybeButton.setVisibility(View.INVISIBLE);
-        }
-        else
-        {
+        }else{
+            Log.d(TAG, "Owner = not this user" + event.owner + "," + this_user);
             addFriendsButton.setVisibility(View.INVISIBLE);
             inviteeStatusButton.setVisibility(View.INVISIBLE);
         }
-
     }
+    public void locationClicked(final View v)
+    {
+        String uri = String.format(Locale.ENGLISH, "geo:0,0?q=%s", event.location);
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+        this.startActivity(intent);
+    }
+
+
     public void onClick(final View v) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String email = prefs.getString("email", null);
@@ -286,8 +267,6 @@ public class DisplayEventActivity extends ActionBarActivity {
                 response = "undecided";
                 break;
         }
-
-
 
         Backend.respondToInvite(email, event.event_id, response, new Backend.BackendCallback() {
             @Override
@@ -313,20 +292,15 @@ public class DisplayEventActivity extends ActionBarActivity {
     }
 
 
-    public void add_friends(View view){
-
+    public void add_friends(View view) {
         Intent intent = new Intent(this, ContactSelectorActivity.class);
         startActivity(intent);
-        int i;
 
         ArrayList<String> friends_to_invite=new ArrayList<String>();
         friends_to_invite.add("abc");
         String friends_to_invite_string = "";
 
-
-
-
-        for(i=0;i<friends_to_invite.size();i++){
+        for(int i=0;i<friends_to_invite.size();i++){
             Invitee invitee = new Invitee();
             invitee.name = friends_to_invite.get(i);
             invitee.event = event;
@@ -337,7 +311,6 @@ public class DisplayEventActivity extends ActionBarActivity {
         }
         friends_to_invite_string = friends_to_invite_string.substring(0,friends_to_invite_string.length()-1);
 
-
         Backend.InviteFriends(event, friends_to_invite_string, new Backend.BackendCallback() {
             @Override
             public void onRequestCompleted(final String result) {
@@ -346,8 +319,6 @@ public class DisplayEventActivity extends ActionBarActivity {
                             Toast.makeText(getApplicationContext(), result, Toast.LENGTH_SHORT).show();
                     }
                     });
-
-
             }
 
             @Override
@@ -359,10 +330,6 @@ public class DisplayEventActivity extends ActionBarActivity {
                 });
             }
         });
-
-
-
-
     }
 
 

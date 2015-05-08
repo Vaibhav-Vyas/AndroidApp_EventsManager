@@ -45,15 +45,15 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 public class CreateEventActivity extends FragmentActivity {
-    private Button startDate;
-    private Button endDate;
-    private Button startTime;
-    private Button endTime;
     private static final String TAG = "Create event tag:";
 
     private static final int RESULT_LOAD_IMG = 1;
     private String imgDecodableString;
 
+    private Button startDateButton;
+    private Button endDateButton;
+    private Button startTimeButton;
+    private Button endTimeButton;
     private Switch public_private_switch;
     private Switch invitation_allowed_switch;
 
@@ -67,29 +67,27 @@ public class CreateEventActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_event);
 
-        startDate = (Button)findViewById(R.id.start_date);
-        endDate = (Button)findViewById(R.id.end_date);
-        startTime = (Button)findViewById(R.id.start_time);
-        endTime = (Button)findViewById(R.id.end_time);
+        startDateButton = (Button)findViewById(R.id.start_date);
+        endDateButton = (Button)findViewById(R.id.end_date);
+        startTimeButton = (Button)findViewById(R.id.start_time);
+        endTimeButton = (Button)findViewById(R.id.end_time);
+        public_private_switch = (Switch) findViewById(R.id.publicPrivate);
+        invitation_allowed_switch = (Switch) findViewById(R.id.invitationAllowed);
 
         start = Calendar.getInstance();
         end = Calendar.getInstance();
+        end.set(Calendar.HOUR_OF_DAY, start.get(Calendar.HOUR_OF_DAY) + 1);
 
-        startDate.setText(new SimpleDateFormat("MM/dd/yyyy").format(start.getTime()));
-        endDate.setText(new SimpleDateFormat("MM/dd/yyyy").format(end.getTime()));
-
-        startTime.setText(new SimpleDateFormat("hh:mm aa").format(start.getTime()));
-        endTime.setText(new SimpleDateFormat("hh:mm aa").format(end.getTime()));
+        startDateButton.setText(new SimpleDateFormat("MM/dd/yyyy").format(start.getTime()));
+        endDateButton.setText(new SimpleDateFormat("MM/dd/yyyy").format(end.getTime()));
+        startTimeButton.setText(new SimpleDateFormat("hh:mm aa").format(start.getTime()));
+        endTimeButton.setText(new SimpleDateFormat("hh:mm aa").format(end.getTime()));
 
 
         RelativeLayout rLayout = (RelativeLayout)findViewById (R.id.create_event_relative_layout);
         Resources res = getResources(); //resource handle
         Drawable drawable = res.getDrawable(R.drawable.background_createevent3); //new Image that was added to the res folder
-
         rLayout.setBackground(drawable);
-
-
-
     }
 
     public void onClick(final View v)
@@ -110,7 +108,11 @@ public class CreateEventActivity extends FragmentActivity {
                         start.set(Calendar.YEAR, year);
                         start.set(Calendar.MONTH, monthOfYear);
                         start.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                        ((Button) v).setText(new SimpleDateFormat("MM/dd/yyyy").format(start.getTime()));
+                        end.set(Calendar.YEAR, year);
+                        end.set(Calendar.MONTH, monthOfYear);
+                        end.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                        startDateButton.setText(new SimpleDateFormat("MM/dd/yyyy").format(start.getTime()));
+                        endDateButton.setText(new SimpleDateFormat("MM/dd/yyyy").format(start.getTime()));
                     }
                 });
                 date.show(getSupportFragmentManager(), "Date Picker");
@@ -130,7 +132,7 @@ public class CreateEventActivity extends FragmentActivity {
                         end.set(Calendar.YEAR, year);
                         end.set(Calendar.MONTH, monthOfYear);
                         end.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                        ((Button) v).setText(new SimpleDateFormat("MM/dd/yyyy").format(end.getTime()));
+                        endDateButton.setText(new SimpleDateFormat("MM/dd/yyyy").format(end.getTime()));
                     }
                 });
                 date.show(getSupportFragmentManager(), "Date Picker");
@@ -149,7 +151,10 @@ public class CreateEventActivity extends FragmentActivity {
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute)  {
                         start.set(Calendar.HOUR_OF_DAY, hourOfDay);
                         start.set(Calendar.MINUTE, minute);
-                        ((Button)v).setText(new SimpleDateFormat("hh:mm aa").format(start.getTime()));
+                        end.set(Calendar.MINUTE, start.get(Calendar.MINUTE));
+                        end.set(Calendar.HOUR_OF_DAY, start.get(Calendar.HOUR_OF_DAY) + 1);
+                        startTimeButton.setText(new SimpleDateFormat("hh:mm aa").format(start.getTime()));
+                        endTimeButton.setText(new SimpleDateFormat("hh:mm aa").format(end.getTime()));
                     }});
                 date.show(getSupportFragmentManager(), "Date Picker");
             }
@@ -166,7 +171,7 @@ public class CreateEventActivity extends FragmentActivity {
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute)  {
                         end.set(Calendar.HOUR_OF_DAY, hourOfDay);
                         end.set(Calendar.MINUTE, minute);
-                        ((Button)v).setText(new SimpleDateFormat("hh:mm aa").format(end.getTime()));
+                        endTimeButton.setText(new SimpleDateFormat("hh:mm aa").format(end.getTime()));
                     }});
                 date.show(getSupportFragmentManager(), "Date Picker");
             }
@@ -178,16 +183,8 @@ public class CreateEventActivity extends FragmentActivity {
                 startActivityForResult(galleryIntent, RESULT_LOAD_IMG);
             break;
 
-            /*case R.id.invite_friends_button: {
-                Intent intent = new Intent(this, ContactSelectorActivity.class);
-                startActivity(intent);
-            }
-            break;*/
-
             case R.id.create_event_button:
                 final Event event = new Event();
-
-                //event.eventId = "dummy" + (long)Calendar.getInstance().getTimeInMillis()/1000;
 
                 EditText editText = (EditText)findViewById(R.id.event_name);
                 event.name= editText.getText().toString();
@@ -198,64 +195,26 @@ public class CreateEventActivity extends FragmentActivity {
                 editText = (EditText)findViewById(R.id.event_description);
                 event.description = editText.getText().toString();
 
-
                 event.image_url = imgDecodableString;
-
-                public_private_switch = (Switch) findViewById(R.id.publicPrivate);
-                if(public_private_switch.isChecked()){
-                    event.public_event=true;
-                }else {
-                    event.public_event=false;
-                }
-
-                invitation_allowed_switch = (Switch) findViewById(R.id.invitationAllowed);
-                if(invitation_allowed_switch.isChecked()){
-                    event.invitation_allowed=true;
-                }else {
-                    event.invitation_allowed=false;
-                }
-
+                event.public_event = public_private_switch.isChecked();
+                event.invitation_allowed = invitation_allowed_switch.isChecked();
 
                 /////// Date and time
                 event.start_time = start.getTimeInMillis();
                 event.end_time = end.getTimeInMillis();
 
-
-
-
-
-
                 // Owner
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                 event.owner= prefs.getString("email", null);
-
                 event.status = "owner";
 
                 if((event.name).matches("")){
                     Toast.makeText(this, "Please insert a name for the event", Toast.LENGTH_SHORT).show();
                 }else{
-
                     Log.d("Sujith", " Saving event with start_time = " + event.start_time);
-
                     event.save();
-
                     saveEventToBackend(event);
-
-
-                    // Call display event to add friends
-
-                    /*Gson gson = new GsonBuilder().create();
-                    Intent intent = new Intent(this, DisplayEventActivity.class);
-
-                    String eventJSON=gson.toJson(event,Event.class);
-                    intent.putExtra("event", eventJSON);
-                    intent.putExtra("location", "local");
-                    startActivity(intent);*/
-
-
-                    //super.onBackPressed();
                 }
-
                 break;
         }
     }
@@ -284,16 +243,12 @@ public class CreateEventActivity extends FragmentActivity {
                             intent.putExtra("event", eventJSON);
                             intent.putExtra("location", "local");
                             startActivity(intent);
-
                             //addEventToCalender(event);
                         }
                         catch(Throwable t)
                         {
                             Log.d(TAG, "Error converting result to json");
                         }
-
-
-
                     }
                 });
             }
