@@ -3,13 +3,33 @@ import android.app.Activity;
 import android.app.LoaderManager;
 import android.content.Context;
 import android.content.CursorLoader;
+import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract.CommonDataKinds;
 import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.QuickContactBadge;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.gson.Gson;
+import com.socialapp.eventmanager.Models.Event;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
 /**
  * Helper class to handle all the callbacks that occur when interacting with loaders.  Most of the
@@ -26,6 +46,9 @@ public class ContactsRetriever implements LoaderManager.LoaderCallbacks<Cursor> 
     public ContactsRetriever(Context context) {
         mContext = context;
     }
+
+    // create map to emails
+    public static Map<String, String > emailMap = new HashMap<String, String>();
 
     @Override
     public Loader<Cursor> onCreateLoader(int loaderIndex, Bundle args) {
@@ -96,7 +119,7 @@ public class ContactsRetriever implements LoaderManager.LoaderCallbacks<Cursor> 
         }
 
         // Reset text in case of a previous query
-        tv.setText(mContext.getText(R.string.intro_message) + "\n\n");
+        //tv.setText(mContext.getText(R.string.intro_message) + "\n\n");
 
         if (cursor.getCount() == 0) {
             Log.e(TAG, "No contacts found on this device.");
@@ -117,12 +140,18 @@ public class ContactsRetriever implements LoaderManager.LoaderCallbacks<Cursor> 
         // Lookup key is the easiest way to verify a row of data is for the same
         // contact as the previous row.
         String lookupKey = "";
+        int showMaxEntries = 50;
+        final LinearLayout eventContainer = (LinearLayout) ((Activity)mContext).findViewById(R.id.contactsSelector);
+        eventContainer.removeAllViews();
         do {
             // BEGIN_INCLUDE(lookup_key)
+            String emailId = "";
             String currentLookupKey = cursor.getString(lookupColumnIndex);
+            String displayName = "";
+
             if (!lookupKey.equals(currentLookupKey)) {
-                String displayName = cursor.getString(nameColumnIndex);
-                tv.append(displayName + "\n");
+                displayName = cursor.getString(nameColumnIndex);
+                //tv.append(displayName + "\n");
                 lookupKey = currentLookupKey;
             }
             // END_INCLUDE(lookup_key)
@@ -131,11 +160,16 @@ public class ContactsRetriever implements LoaderManager.LoaderCallbacks<Cursor> 
             // The data type can be determined using the mime type column.
             String mimeType = cursor.getString(typeColumnIndex);
             if (mimeType.equals(CommonDataKinds.Phone.CONTENT_ITEM_TYPE)) {
-                tv.append("\tPhone Number: " + cursor.getString(phoneColumnIndex) + "\n");
+                //tv.append("\tPhone Number: " + cursor.getString(phoneColumnIndex) + "\n");
             } else if (mimeType.equals(CommonDataKinds.Email.CONTENT_ITEM_TYPE)) {
-                tv.append("\tEmail Address: " + cursor.getString(emailColumnIndex) + "\n");
+                emailId = cursor.getString(emailColumnIndex);
+                //tv.append("\tEmail Address: " + emailId + "\n");
             }
             // END_INCLUDE(retrieve_data)
+
+            // Skip this entry if the email id is NOT present.
+            if (emailId.length() == 0)
+                continue;
 
             // Look at DDMS to see all the columns returned by a query to Contactables.
             // Behold, the firehose!
@@ -143,6 +177,83 @@ public class ContactsRetriever implements LoaderManager.LoaderCallbacks<Cursor> 
                 Log.d(TAG, column + column + ": " +
                         cursor.getString(cursor.getColumnIndex(column)) + "\n");
             }
+
+            //Event currEvent = events.get(i);
+            View phoneContactView = (RelativeLayout)((Activity)mContext).getLayoutInflater().inflate(R.layout.phone_contact_item, null);
+
+            phoneContactView.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View v) {
+                    /*
+                    int index=((ViewGroup)v.getParent()).indexOfChild(v);
+
+                    Event selectedEvent=events.get(index);
+
+                    Gson gson=new Gson();
+                    String eventJSON=gson.toJson(selectedEvent,Event.class);
+
+                    Intent newActivity=new Intent(getActivity(),DisplayEventActivity.class);
+                    newActivity.putExtra("event", eventJSON);
+                    newActivity.putExtra("location", "local");
+                    startActivity(newActivity);
+                    */
+                }
+            });
+
+            Random rnd = new Random();
+            int transparency = 160;
+            int color = Color.argb(transparency, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
+
+            View view = (RelativeLayout)  phoneContactView.findViewById(R.id.phoneContactEntry);
+            view.setBackgroundColor(color);
+
+
+            TextView contactName = (TextView) phoneContactView.findViewById(R.id.contactName);
+            contactName.setText(displayName);
+
+            TextView emailIdText =
+                    (TextView) phoneContactView.findViewById(R.id.emailId);
+            emailIdText.setText(emailId);
+
+            QuickContactBadge iv= (QuickContactBadge)phoneContactView.findViewById(R.id.icon);
+
+            CheckBox satView = (CheckBox) phoneContactView.findViewById(R.id.checkBoxSelectContact);
+            satView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                    String emailId = ((TextView) buttonView.getRootView ().findViewById(R.id.emailId)).getText().toString();
+                    String contactName = ((TextView) buttonView.getRootView().findViewById(R.id.contactName)).getText().toString();
+                    if (buttonView.isChecked()) {
+                        // if checked, then add to hashMap
+                        emailMap.put(emailId, contactName);
+                        Toast.makeText((mContext), "Added the key " + emailId + ", contact name = " + contactName, Toast.LENGTH_SHORT).show();
+
+                    } else {
+                        // un-checked, then remove from hashMap
+                        emailMap.remove(buttonView.getRootView().findViewById(R.id.emailId));
+                        Toast.makeText((mContext), "Removed the key " + emailId + ", contact name = " + contactName, Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+            /*if(currEvent.image_url != null && !currEvent.image_url.equals(""))
+            {
+                iv.setImageBitmap(BitmapFactory.decodeFile(currEvent.image_url));
+            }
+            else
+            */ {
+                //iv.setImageResource(R.drawable.event_pic);
+            }
+
+            if(0 >= showMaxEntries--)
+            {
+                cursor.moveToLast();
+                break;
+            }
+
+            eventContainer.addView(phoneContactView);
+
         } while (cursor.moveToNext());
     }
 

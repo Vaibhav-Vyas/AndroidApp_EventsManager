@@ -315,8 +315,8 @@ public class DisplayEventActivity extends ActionBarActivity {
 
     public void add_friends(View view){
 
-        //Intent intent = new Intent(this, ContactSelectorActivity.class);
-        //startActivity(intent);
+        Intent intent = new Intent(this, ContactSelectorActivity.class);
+        startActivity(intent);
         int i;
 
         ArrayList<String> friends_to_invite=new ArrayList<String>();

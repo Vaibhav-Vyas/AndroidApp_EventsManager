@@ -35,7 +35,7 @@
     <string name="facebook_app_id">799923176750576</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_display_event">DisplayEventActivity</string>
-    <string name="intro_message">Please select people from  FB contacts or Phone book contacts.</string>
+    <string name="intro_message">Please select people from  FB contacts or Phone book contacts.Showing 50 entries per page. Refine using Search Box(min 3 chars).</string>
     <string name="title_activity_contact_selector">ContactSelectorActivity</string>
 
 </resources>

@@ -46,6 +46,13 @@ public class ContactSelectorActivity extends ActionBarActivity {
         searchContactsInfo(view, true);
     }
 
+    public void searchContactsInfo(View view){
+        // adding this check to reduce the number of queries.
+        if (mEdit.getText().length() >= 3 ) {
+            searchContactsInfo(view, false);
+        }
+    }
+
     public void searchContactsInfo(View view, boolean firstRunOnCreate)
         {
         String query =  mEdit.getText().toString();   // intent.getStringExtra(SearchManager.QUERY);
