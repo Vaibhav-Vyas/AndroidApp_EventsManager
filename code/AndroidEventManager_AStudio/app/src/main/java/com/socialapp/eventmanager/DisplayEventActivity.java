@@ -212,13 +212,13 @@ public class DisplayEventActivity extends ActionBarActivity {
 
         tv = (TextView)findViewById(R.id.eventStartTime);
         cl.setTimeInMillis((event.start_time));
-        String date = new SimpleDateFormat("MM/dd/yyyy").format(cl.getTime());
+        String date = new SimpleDateFormat("MMM dd").format(cl.getTime());
         String time = new SimpleDateFormat("hh:mm aa").format(cl.getTime());
         tv.setText(date + "    " + time);
 
         tv = (TextView)findViewById(R.id.eventEndTime);
         cl.setTimeInMillis((event.end_time));
-        date = new SimpleDateFormat("MM/dd/yyyy").format(cl.getTime());
+        date = new SimpleDateFormat("MMM dd").format(cl.getTime());
         time = new SimpleDateFormat("hh:mm aa").format(cl.getTime());
         tv.setText(date + "    " + time);
 
@@ -227,6 +227,17 @@ public class DisplayEventActivity extends ActionBarActivity {
             Log.d(TAG, "Showing image :" + event.image_url);
             iv.setImageBitmap(BitmapFactory.decodeFile(event.image_url));
             Log.d(TAG, "Image showed");
+        }
+
+        RelativeLayout detailsLayout = (RelativeLayout)findViewById(R.id.descriptionLayout);
+        if(event.description != null && event.description != "")
+        {
+            tv = (TextView)findViewById(R.id.eventDetails);
+            tv.setText(event.description);
+        }
+        else
+        {
+            detailsLayout.setVisibility(View.GONE);
         }
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);

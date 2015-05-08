@@ -3,183 +3,247 @@
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/display_event_relative_layout"
-    tools:context="com.socialapp.eventmanager.DisplayEventActivity"
-    android:padding="5dp">
-
-    <ImageView
+    tools:context="com.socialapp.eventmanager.DisplayEventActivity">
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:id="@+id/eventImage"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:src="@drawable/event_pic"
-        android:scaleType="centerCrop"/>
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:background="@drawable/image_gradient"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"/>
+        android:layout_height="wrap_content">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:hint="Event Name"
-        android:id="@+id/eventName"
-        android:textSize="24dp"
-        android:textColor="@color/bright_foreground_inverse_material_light"
-        android:layout_alignBottom="@+id/eventImage"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:padding="5dp" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/headingLayout">
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="180dp"
+                    android:id="@+id/eventImage"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:src="@drawable/event_pic"
+                    android:scaleType="centerCrop"/>
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="180dp"
+                    android:background="@drawable/image_gradient"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Start: "
-        android:id="@+id/textView1"
-        android:layout_below="@+id/eventImage"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:padding="5dp"
-        android:textSize="15dp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="Event Name"
+                    android:id="@+id/eventName"
+                    android:textSize="24dp"
+                    android:textColor="@color/bright_foreground_inverse_material_light"
+                    android:layout_alignBottom="@+id/eventImage"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:padding="5dp" />
+            </RelativeLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:hint="Start_time"
-        android:id="@+id/eventStartTime"
-        android:padding="5dp"
-        android:textSize="15dp"
-        android:layout_below="@+id/eventImage"
-        android:layout_toRightOf="@+id/textView1"
-        android:layout_toEndOf="@+id/textView1" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/timeLayout"
+                android:layout_below="@+id/headingLayout">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="End: "
-        android:id="@+id/textView2"
-        android:padding="5dp"
-        android:textSize="15dp"
-        android:layout_below="@+id/textView1"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:id="@+id/imageView1"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:src="@drawable/clock"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginBottom="20dp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Starts at"
+                    android:id="@+id/textView1"
+                    android:textSize="15dp"
+                    android:textStyle="bold|italic"
+                    android:layout_toRightOf="@+id/imageView1"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginLeft="5dp" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:hint="End_time"
-        android:id="@+id/eventEndTime"
-        android:padding="5dp"
-        android:textSize="15dp"
-        android:layout_alignTop="@+id/textView2"
-        android:layout_toRightOf="@+id/textView1"
-        android:layout_toEndOf="@+id/textView2" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="Start_time"
+                    android:id="@+id/eventStartTime"
+                    android:textSize="15dp"
+                    android:layout_toRightOf="@+id/textView1"
+                    android:layout_alignBottom="@+id/textView1"
+                    android:layout_marginLeft="15dp" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_below="@+id/textView2"
-        android:background="@android:color/darker_gray"
-        android:id="@+id/view" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Ends at"
+                    android:id="@+id/textView2"
+                    android:textSize="15dp"
+                    android:textStyle="bold|italic"
+                    android:layout_toRightOf="@+id/imageView1"
+                    android:layout_below="@+id/textView1"
+                    android:layout_marginLeft="5dp" />
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/view"
-        android:id="@+id/locationLayout"
-        android:onClick="locationClicked">
-        <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:id="@+id/imageView"
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="End_time"
+                    android:id="@+id/eventEndTime"
+                    android:textSize="15dp"
+                    android:layout_toRightOf="@+id/textView2"
+                    android:layout_below="@id/eventStartTime"
+                    android:layout_alignTop="@+id/textView2"
+                    android:layout_alignLeft="@+id/eventStartTime"/>
+            </RelativeLayout>
 
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:src="@drawable/location_icon"
-            android:layout_margin="20dp" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@+id/timeLayout"
+                android:background="@android:color/darker_gray"
+                android:id="@+id/view" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Where"
-            android:id="@+id/textView"
-            android:layout_toRightOf="@+id/imageView"
-            android:layout_toEndOf="@+id/imageView"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="16dp"
-            android:textSize="18dp" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/view"
+                android:id="@+id/locationLayout"
+                android:onClick="locationClicked">
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:id="@+id/imageView2"
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:hint="Event Location"
-            android:id="@+id/eventLocation"
-            android:layout_below="@+id/textView"
-            android:layout_alignLeft="@+id/textView"
-            android:layout_alignStart="@+id/textView"
-            android:textSize="15dp" />
-    </RelativeLayout>
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:src="@drawable/location_icon"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginBottom="10dp" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_below="@+id/locationLayout"
-        android:background="@android:color/darker_gray"
-        android:id="@+id/view2" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Where"
+                    android:id="@+id/textView"
+                    android:layout_toRightOf="@+id/imageView2"
+                    android:layout_toEndOf="@+id/imageView2"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="16dp"
+                    android:textSize="18dp"
+                    android:visibility="gone"/>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Invite Friends"
-        android:id="@+id/addFriendsButton"
-        android:onClick="add_friends"
-        android:layout_gravity="center_horizontal"
-        android:layout_above="@+id/accept"
-        android:layout_toLeftOf="@+id/eventName"
-        android:layout_toStartOf="@+id/eventName" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="Event Location"
+                    android:id="@+id/eventLocation"
+                    android:textSize="15dp"
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@+id/imageView2"
+                    android:layout_toEndOf="@+id/imageView2" />
+            </RelativeLayout>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Accept"
-        android:id="@+id/accept"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:onClick="onClick"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@+id/locationLayout"
+                android:background="@android:color/darker_gray"
+                android:id="@+id/view2" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Decline"
-        android:id="@+id/decline"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:onClick="onClick"/>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/descriptionLayout"
+                android:layout_below="@+id/locationLayout">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="Details"
+                    android:padding="5dp"
+                    android:textSize="18dp"
+                    android:id="@+id/textView3"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="Event Description"
+                    android:id="@+id/eventDetails"
+                    android:textSize="15dp"
+                    android:layout_below="@+id/textView3"
+                    android:paddingBottom="5dp"
+                    android:paddingLeft="5dp" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="May be"
-        android:id="@+id/maybe"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:onClick="onClick"/>
+            </RelativeLayout>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Status of Invitees"
-        android:id="@+id/invitee_status_button"
-        android:onClick="show_invitees_status"
-        android:layout_gravity="center_horizontal"
-        android:nestedScrollingEnabled="false"
-        android:layout_above="@+id/decline"
-        android:layout_centerHorizontal="true" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@+id/descriptionLayout"
+                android:background="@android:color/darker_gray"
+                android:id="@+id/view3" />
 
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/view3">
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Invite Friends"
+                    android:id="@+id/addFriendsButton"
+                    android:onClick="add_friends"
+                    android:layout_below="@+id/invitee_status_button"
+                    android:layout_centerHorizontal="true" />
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Accept"
+                    android:id="@+id/accept"
+                    android:onClick="onClick"
+                    android:layout_below="@+id/addFriendsButton"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true" />
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Decline"
+                    android:id="@+id/decline"
+                    android:onClick="onClick"
+                    android:layout_below="@+id/addFriendsButton"
+                    android:layout_centerHorizontal="true" />
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="May be"
+                    android:id="@+id/maybe"
+                    android:onClick="onClick"
+                    android:layout_below="@+id/addFriendsButton"/>
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Status of Invitees"
+                    android:id="@+id/invitee_status_button"
+                    android:onClick="show_invitees_status"
+                    android:layout_gravity="center_horizontal"
+                    android:nestedScrollingEnabled="false"
+                    android:layout_centerHorizontal="true" />
+            </RelativeLayout>
+        </RelativeLayout>
+    </ScrollView>
 </RelativeLayout>
