@@ -1,31 +1,41 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:paddingRight="15dp">
+    android:layout_height="100dp"
+    android:background="@drawable/event_item_back"
+    android:padding="3dp">
 
     <ImageView
         android:layout_width="150dp"
-        android:layout_height="100dp"
+        android:layout_height="match_parent"
         android:id="@+id/eventImage"
+        android:scaleType="centerCrop"
+        android:src="@drawable/event_pic"
         android:layout_alignParentLeft="true" />
 
     <TextView
         android:id="@+id/eventName"
         android:layout_alignParentRight="true"
-        android:layout_width="wrap_content"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:hint="Event Title"
         android:textSize="20dp"
-        android:textStyle="bold"
-        android:layout_marginTop="10dp" />
+        android:maxLines="1"
+        android:gravity="right"
+        android:scrollHorizontally="true"
+        android:ellipsize="end"
+        android:textStyle="bold"/>
 
     <TextView
         android:id="@+id/event_description"
         android:layout_alignParentRight="true"
         android:layout_below="@id/eventName"
-        android:layout_width="wrap_content"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
+        android:gravity="right"
         android:hint="Description"
-        android:textSize="15dp" />
+        android:textSize="15dp"
+        android:maxLines="1"
+        android:scrollHorizontally="true"
+        android:ellipsize="end" />
 
 </RelativeLayout>

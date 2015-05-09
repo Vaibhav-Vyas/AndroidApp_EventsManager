@@ -19,7 +19,6 @@
         android:layout_height="?android:attr/listPreferredItemHeight"
         android:layout_width="?android:attr/listPreferredItemHeight"
         android:scaleType="fitCenter"
-        style="@style/quickContactBadgeStyle"
         android:src="@drawable/ic_contact_picture_holo_light"
         android:layout_marginLeft="33dp"
         android:layout_marginStart="33dp"

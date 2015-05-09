@@ -82,12 +82,6 @@ public class CreateEventActivity extends FragmentActivity {
         endDateButton.setText(new SimpleDateFormat("MM/dd/yyyy").format(end.getTime()));
         startTimeButton.setText(new SimpleDateFormat("hh:mm aa").format(start.getTime()));
         endTimeButton.setText(new SimpleDateFormat("hh:mm aa").format(end.getTime()));
-
-
-        RelativeLayout rLayout = (RelativeLayout)findViewById (R.id.create_event_relative_layout);
-        Resources res = getResources(); //resource handle
-        Drawable drawable = res.getDrawable(R.drawable.background_createevent3); //new Image that was added to the res folder
-        rLayout.setBackground(drawable);
     }
 
     public void onClick(final View v)
@@ -182,6 +176,10 @@ public class CreateEventActivity extends FragmentActivity {
                         android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(galleryIntent, RESULT_LOAD_IMG);
             break;
+
+            case R.id.cancelEvent:
+                finish();
+                break;
 
             case R.id.create_event_button:
                 final Event event = new Event();

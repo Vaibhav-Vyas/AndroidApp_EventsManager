@@ -1,12 +1,16 @@
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/display_event_relative_layout"
-    tools:context="com.socialapp.eventmanager.DisplayEventActivity">
+    tools:context="com.socialapp.eventmanager.DisplayEventActivity"
+    android:orientation="vertical"
+    android:background="@drawable/background_displayevent">
+
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:id="@+id/scrollView1">
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -136,18 +140,6 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Where"
-                    android:id="@+id/textView"
-                    android:layout_toRightOf="@+id/imageView2"
-                    android:layout_toEndOf="@+id/imageView2"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="16dp"
-                    android:textSize="18dp"
-                    android:visibility="gone"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
                     android:hint="Event Location"
                     android:id="@+id/eventLocation"
                     android:textSize="15dp"
@@ -166,27 +158,69 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:id="@+id/hostedByLayout"
+                android:layout_below="@+id/view2"
+                android:visibility="visible">
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/host"
+                    android:id="@+id/imageView3"
+
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginRight="17dp"
+                    android:layout_marginBottom="15dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="Hosted By"
+                    android:layout_toRightOf="@+id/imageView3"
+                    android:layout_toEndOf="@+id/imageView3"
+                    android:layout_marginLeft="0dp"
+                    android:layout_marginTop="8dp"
+                    android:textSize="16dp"
+                    android:id="@+id/textView4"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="Event Owner"
+                    android:id="@+id/eventHost"
+                    android:layout_toRightOf="@+id/imageView3"
+                    android:layout_toEndOf="@+id/imageView3"
+                    android:layout_below="@+id/textView4"
+                    android:layout_marginLeft="0dp"
+                    android:layout_marginTop="5dp"
+                    android:textSize="15dp"
+                    android:text="Description" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_below="@+id/imageView3"
+                    android:background="@android:color/darker_gray"
+                    android:id="@+id/view4" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:id="@+id/descriptionLayout"
-                android:layout_below="@+id/locationLayout">
+                android:layout_below="@+id/hostedByLayout">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:hint="Details"
-                    android:padding="5dp"
-                    android:textSize="18dp"
-                    android:id="@+id/textView3"
-                    android:visibility="gone"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:hint="Event Description"
+                    android:hint="Description"
                     android:id="@+id/eventDetails"
                     android:textSize="15dp"
-                    android:layout_below="@+id/textView3"
                     android:paddingBottom="5dp"
                     android:paddingLeft="5dp"
                     android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp" />
+                    android:layout_marginBottom="10dp"
+                    android:text="Description" />
 
             </RelativeLayout>
 
@@ -197,56 +231,218 @@
                 android:background="@android:color/darker_gray"
                 android:id="@+id/view3" />
 
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:id="@+id/statusLayout"
                 android:layout_below="@+id/view3">
-                <Button
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Invite Friends"
-                    android:id="@+id/addFriendsButton"
-                    android:onClick="add_friends"
-                    android:layout_below="@+id/invitee_status_button"
-                    android:layout_centerHorizontal="true" />
+                    android:padding="10dp"
+                    android:id="@+id/statusLinearLayout">
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.25"
+                        android:layout_margin="5dp"
+                        android:id="@+id/accepted"
+                        android:onClick="onStatusClicked">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:id="@+id/acceptCount"
+                            android:layout_centerHorizontal="true" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="accepted"
+                            android:layout_below="@+id/acceptCount"
+                            android:layout_centerHorizontal="true" />
+                    </RelativeLayout>
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.25"
+                        android:gravity="center"
+                        android:layout_margin="5dp"
+                        android:id="@+id/maybed"
+                        android:onClick="onStatusClicked">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:id="@+id/maybeCount"
+                            android:layout_centerHorizontal="true" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="maybe"
+                            android:layout_below="@+id/maybeCount"
+                            android:layout_centerHorizontal="true" />
+                    </RelativeLayout>
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.25"
+                        android:gravity="center"
+                        android:layout_margin="5dp"
+                        android:id="@+id/invited"
+                        android:onClick="onStatusClicked">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:id="@+id/invitedCount"
+                            android:layout_centerHorizontal="true" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="invited"
+                            android:layout_below="@+id/invitedCount"
+                            android:layout_centerHorizontal="true" />
+                    </RelativeLayout>
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.25"
+                        android:gravity="center"
+                        android:layout_margin="5dp"
+                        android:id="@+id/declined"
+                        android:onClick="onStatusClicked">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:id="@+id/declinedCount"
+                            android:layout_centerHorizontal="true" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="declined"
+                            android:layout_below="@+id/declinedCount"
+                            android:layout_centerHorizontal="true" />
+                    </RelativeLayout>
+                </LinearLayout>
 
-                <Button
-                    android:layout_width="wrap_content"
+                <RelativeLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Accept"
-                    android:id="@+id/accept"
-                    android:onClick="onClick"
-                    android:layout_below="@+id/addFriendsButton"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true" />
-
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Decline"
-                    android:id="@+id/decline"
-                    android:onClick="onClick"
-                    android:layout_below="@+id/addFriendsButton"
-                    android:layout_centerHorizontal="true" />
-
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="May be"
-                    android:id="@+id/maybe"
-                    android:onClick="onClick"
-                    android:layout_below="@+id/addFriendsButton"/>
-
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Status of Invitees"
-                    android:id="@+id/invitee_status_button"
-                    android:onClick="show_invitees_status"
-                    android:layout_gravity="center_horizontal"
-                    android:nestedScrollingEnabled="false"
-                    android:layout_centerHorizontal="true" />
+                    android:layout_below="@+id/statusLinearLayout"
+                    android:gravity="center_horizontal">
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Invite Friends"
+                        android:id="@+id/addFriendsButton"
+                        android:onClick="add_friends"/>
+                </RelativeLayout>
             </RelativeLayout>
+
         </RelativeLayout>
     </ScrollView>
-</RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#aaaaaa"
+            android:id="@+id/bottomLayout1">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".50"
+                android:text="Edit"
+                android:id="@+id/editEvent"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:padding="10dp"
+                android:textSize="20dp"
+                android:background="@drawable/text_button_states"/>
+            <View
+                android:layout_width="1dp"
+                android:layout_height="45dp"
+                android:layout_below="@+id/editEvent"
+                android:background="#626262"
+                android:layout_centerInParent="true" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".50"
+                android:text="Delete"
+                android:id="@+id/deleteEvent"
+                android:textStyle="bold"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:padding="10dp"
+                android:textSize="20dp"
+                android:background="@drawable/text_button_states"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#aaaaaa"
+            android:id="@+id/bottomLayout2"
+            android:visibility="visible">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".33"
+                android:text="Accept"
+                android:id="@+id/accept"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:onClick="onClick"
+                android:padding="10dp"
+                android:background="@drawable/text_button_states"
+                android:textSize="20dp" />
+            <View
+                android:layout_width="1dp"
+                android:layout_height="45dp"
+                android:layout_below="@+id/editEvent"
+                android:background="#626262"
+                android:layout_centerInParent="true" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".33"
+                android:text="Decline"
+                android:id="@+id/decline"
+                android:textStyle="bold"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:onClick="onClick"
+                android:padding="10dp"
+                android:background="@drawable/text_button_states"
+                android:textSize="20dp" />
+            <View
+                android:layout_width="1dp"
+                android:layout_height="45dp"
+                android:layout_below="@+id/editEvent"
+                android:background="#626262"
+                android:layout_centerInParent="true" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".33"
+                android:text="May be"
+                android:id="@+id/maybe"
+                android:textStyle="bold"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:onClick="onClick"
+                android:padding="10dp"
+                android:background="@drawable/text_button_states"
+                android:textSize="20dp" />
+        </LinearLayout>
+    </RelativeLayout>
+
+</LinearLayout>

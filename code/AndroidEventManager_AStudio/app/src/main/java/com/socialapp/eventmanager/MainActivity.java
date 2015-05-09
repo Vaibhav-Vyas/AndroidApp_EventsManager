@@ -7,6 +7,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
@@ -70,7 +71,7 @@ public class MainActivity extends ActionBarActivity
 
     private static final String TAG = "Sujith";
 
-    private HorizontalScrollView imageScrollView;
+    //private HorizontalScrollView imageScrollView;
     final String drawerTitle = "Navigation";
     DrawerLayout drawerLayout;
     ActionBarDrawerToggle drawerToggle;
@@ -121,13 +122,12 @@ public class MainActivity extends ActionBarActivity
             Log.i(TAG, "No valid Google Play Services APK found.");
         }
 
-        imageScrollView = (HorizontalScrollView)findViewById (R.id.image_scrollView);
+        //imageScrollView = (HorizontalScrollView)findViewById (R.id.image_scrollView);
 
 
         ////////////////////////////////////////////////////////////////////////////
         ////////////////////////// DRAWER //////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
@@ -368,7 +368,7 @@ public class MainActivity extends ActionBarActivity
     public void onTabSelected(Tab tab, FragmentTransaction ft) {
         viewPager.setCurrentItem(tab.getPosition());
         int newPos = tab.getPosition();
-        imageScrollView.smoothScrollBy(250 * (newPos - tabPos), 0);
+        //imageScrollView.smoothScrollBy(250 * (newPos - tabPos), 0);
         tabPos = newPos;
     }
 

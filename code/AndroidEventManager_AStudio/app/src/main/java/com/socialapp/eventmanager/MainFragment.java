@@ -76,15 +76,8 @@ public class MainFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-        //RelativeLayout rLayout = (RelativeLayout) rootView.findViewById (R.id.main_fragment_relative_layout);
-
-        // Background image
-        //Resources res = getResources(); //resource handle
-        //Drawable drawable = res.getDrawable(R.drawable.background_main); //new Image that was added to the res folder
-        //rLayout.setBackground(drawable);
 
         fragmentNumber = getArguments().getInt(ARG_SECTION_NUMBER);
-
         events = new ArrayList<Event>();
 
         ///////////////////////////Events List//////////////////////////////

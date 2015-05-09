@@ -54,11 +54,6 @@ import java.util.Set;
 public class DisplayEventActivity extends ActionBarActivity {
 
     Event event;
-    Button acceptButton;
-    Button declineButton;
-    Button maybeButton;
-    Button addFriendsButton;
-    Button inviteeStatusButton;
 
     private static final String TAG = "DisplayEventActivity";
     private static final int CONTACT_SELECT_REQUEST = 1;  // The request code
@@ -67,17 +62,6 @@ public class DisplayEventActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_displayevent);
-
-        RelativeLayout rLayout = (RelativeLayout)findViewById (R.id.display_event_relative_layout);
-        Resources res = getResources(); //resource handle
-        Drawable drawable = res.getDrawable(R.drawable.background_displayevent); //new Image that was added to the res folder
-        rLayout.setBackground(drawable);
-
-        acceptButton = (Button)findViewById(R.id.accept);
-        declineButton = (Button)findViewById(R.id.decline);
-        maybeButton = (Button)findViewById(R.id.maybe);
-        addFriendsButton = (Button)findViewById(R.id.addFriendsButton);
-        inviteeStatusButton = (Button)findViewById(R.id.invitee_status_button);
 
         String location = getIntent().getStringExtra("location");
         String type = getIntent().getStringExtra("type");
@@ -180,40 +164,6 @@ public class DisplayEventActivity extends ActionBarActivity {
 
     }
 
-
-    public void show_invitees_status(View view){
-        LayoutInflater inflater = getLayoutInflater();
-
-        LinearLayout myRoot = new LinearLayout(this);
-        View itemView = inflater.inflate(R.layout.show_invitees, myRoot);
-
-
-        final LinearLayout inviteeContainer = (LinearLayout) myRoot.findViewById(R.id.inviteeContainer);
-        inviteeContainer.removeAllViews();
-
-        final List<Invitee> invitees = event.getInvitees();
-
-        for (int i = 0; i < invitees.size(); i++) {
-            Log.d(TAG, "Got invitee =" + invitees.get(i).name);
-
-            Invitee curr_invitee = invitees.get(i);
-            View inviteeItem = inflater.inflate(R.layout.invitee_item, null);
-
-            TextView inviteeNameText = (TextView) inviteeItem.findViewById(R.id.inviteeName);
-            inviteeNameText.setText(curr_invitee.name);
-
-            TextView inviteeStatus = (TextView) inviteeItem.findViewById(R.id.inviteeStatus);
-            inviteeStatus.setText(curr_invitee.status);
-
-            inviteeContainer.addView(inviteeItem);
-        }
-        final Dialog dialog = new Dialog(this);
-        dialog.setContentView(myRoot);
-        dialog.setTitle("Status of Friends");
-        dialog.show();
-
-    }
-
     private void showEventOnUI(boolean local)
     {
         Calendar cl = Calendar.getInstance();
@@ -268,20 +218,88 @@ public class DisplayEventActivity extends ActionBarActivity {
         String this_user= prefs.getString("email", null);
         if((event.owner).equals(this_user)){
             Log.d(TAG, "Owner = this user");
-            acceptButton.setVisibility(View.INVISIBLE);
-            declineButton.setVisibility(View.INVISIBLE);
-            maybeButton.setVisibility(View.INVISIBLE);
+            LinearLayout lLayout2 = (LinearLayout)findViewById(R.id.bottomLayout2);
+            RelativeLayout hostedByLayout = (RelativeLayout)findViewById(R.id.hostedByLayout);
+
+            lLayout2.setVisibility(View.GONE);
+            hostedByLayout.setVisibility(View.GONE);
+
+            setStatusCounts();
         }else{
             Log.d(TAG, "Owner = not this user" + event.owner + "," + this_user);
-            addFriendsButton.setVisibility(View.INVISIBLE);
-            inviteeStatusButton.setVisibility(View.INVISIBLE);
+            LinearLayout lLayout1 = (LinearLayout)findViewById(R.id.bottomLayout1);
+            RelativeLayout statusLayout = (RelativeLayout)findViewById(R.id.statusLayout);
+            tv = (TextView)findViewById(R.id.eventHost);
+            tv.setText(event.owner);
+
+            lLayout1.setVisibility(View.GONE);
+            statusLayout.setVisibility(View.GONE);
         }
     }
+
+    public void setStatusCounts()
+    {
+        int accept_count = 0, maybe_count = 0, invite_count = 0, decline_count = 0;
+        List<Invitee> invitees = event.getInvitees();
+        for(Invitee invitee : invitees)
+        {
+            if(invitee.status.equals("invited"))
+                invite_count += 1;
+            else if(invitee.status.equals("undecided"))
+                maybe_count += 1;
+            else if(invitee.status.equals("accepted"))
+                accept_count += 1;
+            else if(invitee.status.equals("declined"))
+                decline_count += 1;
+        }
+        ((TextView)findViewById(R.id.acceptCount)).setText("" + accept_count);
+        ((TextView)findViewById(R.id.maybeCount)).setText("" + maybe_count);
+        ((TextView)findViewById(R.id.invitedCount)).setText("" + invite_count);
+        ((TextView)findViewById(R.id.declinedCount)).setText("" + decline_count);
+    }
+
     public void locationClicked(final View v)
     {
         String uri = String.format(Locale.ENGLISH, "geo:0,0?q=%s", event.location);
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
         this.startActivity(intent);
+    }
+
+    public void onStatusClicked(final View v)  {
+        LayoutInflater inflater = getLayoutInflater();
+        LinearLayout myRoot = new LinearLayout(this);
+        View itemView = inflater.inflate(R.layout.show_invitees, myRoot);
+        final LinearLayout inviteeContainer = (LinearLayout) myRoot.findViewById(R.id.inviteeContainer);
+        inviteeContainer.removeAllViews();
+
+        List<Invitee> invitees = event.getInvitees();
+        String status = "invited";
+        switch (v.getId())
+        {
+            case R.id.accepted:
+                status = "accepted";
+                break;
+            case R.id.maybed:
+                status = "undecided";
+                break;
+            case R.id.declined:
+                status = "declined";
+                break;
+        }
+        for (Invitee invitee : invitees) {
+            if(invitee.status.equals(status)) {
+                View inviteeItem = inflater.inflate(R.layout.invitee_item, null);
+                TextView inviteeNameText = (TextView) inviteeItem.findViewById(R.id.inviteeName);
+                inviteeNameText.setText(invitee.name);
+                TextView inviteeStatus = (TextView) inviteeItem.findViewById(R.id.inviteeStatus);
+                inviteeStatus.setText(invitee.status);
+                inviteeContainer.addView(inviteeItem);
+            }
+        }
+        final Dialog dialog = new Dialog(this);
+        dialog.setContentView(myRoot);
+        dialog.setTitle(status);
+        dialog.show();
     }
 
 

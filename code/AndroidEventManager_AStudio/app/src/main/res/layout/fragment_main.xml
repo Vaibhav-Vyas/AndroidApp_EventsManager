@@ -2,12 +2,13 @@
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/main_fragment_relative_layout"
-    tools:context=".MainActivity$MainFragment">
+    tools:context=".MainActivity$MainFragment"
+    android:background="@drawable/background_main">
 
     <ListView android:id="@+id/event_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:choiceMode="singleChoice"
-        android:divider="@android:color/transparent"
-        android:dividerHeight="0dp"/>
+        android:dividerHeight="3dp"
+        android:padding="2dp" />
 </RelativeLayout>
