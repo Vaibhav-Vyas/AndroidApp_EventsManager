@@ -14,6 +14,11 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_add">Create Events</string>
     <string name="action_search">Search Events</string>
+
+    <string name="action_augmented_reality_today">Augmented Reality: Today\'s Events</string>
+    <string name="action_augmented_reality_weekly">Augmented Reality: Weekly Events</string>
+    <string name="action_augmented_reality_monthly">Augmented Reality: Monthly Event</string>
+
     <string name="action_settings">Settings</string>
     <string name="action_about_us">About Us</string>
     <string name="action_rate_app">Rate App</string>
@@ -38,4 +43,6 @@
     <string name="intro_message">Please select people from  FB contacts or Phone book contacts.Showing 50 entries per page. Refine using Search Box(min 3 chars).</string>
     <string name="title_activity_contact_selector">ContactSelectorActivity</string>
 
+    <string name="menu_settings">Settings</string>
+    <string name="title_activity_main">MainActivity</string>
 </resources>

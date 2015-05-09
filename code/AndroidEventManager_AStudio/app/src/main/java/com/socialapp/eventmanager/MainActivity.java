@@ -48,6 +48,9 @@ import android.support.v7.app.ActionBar.Tab;
 import android.support.v7.app.ActionBarActivity;
 import android.widget.Toast;
 
+import com.cobyplain.augmentreality.DrawSurfaceView;
+import com.cobyplain.augmentreality.Point;
+import com.cobyplain.augmentreality.Compass;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
@@ -416,6 +419,54 @@ public class MainActivity extends ActionBarActivity
         }
         else if(id == R.id.action_add)  {
             Intent intent = new Intent(this, CreateEventActivity.class);
+            startActivity(intent);
+        }
+        else if(id == R.id.action_augmented_reality_today)  {
+            Intent intent = new Intent(this, Compass.class);
+            DrawSurfaceView.props.clear();
+
+            // Lets add pointers for 4 directions.
+            DrawSurfaceView.props.add(new Point(90d, 110.8000, "North"));
+            DrawSurfaceView.props.add(new Point(-90d, -110.8000, "South"));
+            DrawSurfaceView.props.add(new Point(-33.870932d, 151.8000, "East"));
+            DrawSurfaceView.props.add(new Point(-33.870932d, 150.8000, "West"));
+
+            // Followed by which we need to add the event co-ordinates
+            DrawSurfaceView.props.add(new Point(40.072107, -80.408114, "Union South"));
+            DrawSurfaceView.props.add(new Point(48.071676, -110.404633, "CS"));
+
+            startActivity(intent);
+        }
+        else if(id == R.id.action_augmented_reality_weekly)  {
+            Intent intent = new Intent(this, Compass.class);
+            DrawSurfaceView.props.clear();
+
+            // Lets add pointers for 4 directions.
+            DrawSurfaceView.props.add(new Point(90d, 110.8000, "North"));
+            DrawSurfaceView.props.add(new Point(-90d, -110.8000, "South"));
+            DrawSurfaceView.props.add(new Point(-33.870932d, 151.8000, "East"));
+            DrawSurfaceView.props.add(new Point(-33.870932d, 150.8000, "West"));
+
+            // Followed by which we need to add the event co-ordinates
+            DrawSurfaceView.props.add(new Point(40.072107, -80.408114, "Event1"));
+            DrawSurfaceView.props.add(new Point(48.071676, -110.404633, "Event4"));
+
+            startActivity(intent);
+        }
+        else if(id == R.id.action_augmented_reality_monthly)  {
+            Intent intent = new Intent(this, Compass.class);
+            DrawSurfaceView.props.clear();
+
+            // Lets add pointers for 4 directions.
+            DrawSurfaceView.props.add(new Point(90d, 110.8000, "North"));
+            DrawSurfaceView.props.add(new Point(-90d, -110.8000, "South"));
+            DrawSurfaceView.props.add(new Point(-33.870932d, 151.8000, "East"));
+            DrawSurfaceView.props.add(new Point(-33.870932d, 150.8000, "West"));
+
+            // Followed by which we need to add the event co-ordinates
+            DrawSurfaceView.props.add(new Point(40.072107, -80.408114, "AR 1"));
+            DrawSurfaceView.props.add(new Point(48.076474, -120.399797, "AR 2"));
+
             startActivity(intent);
         }
         else if(id == R.id.action_logout)

@@ -12,6 +12,22 @@
         app:showAsAction="never"
         android:title="@string/action_search"/>
     <item
+        android:id="@+id/action_augmented_reality_today"
+        android:orderInCategory="100"
+        app:showAsAction="never"
+        android:title="@string/action_augmented_reality_today"/>
+    <item
+        android:id="@+id/action_augmented_reality_weekly"
+        android:orderInCategory="100"
+        app:showAsAction="never"
+        android:title="@string/action_augmented_reality_weekly"/>
+    <item
+        android:id="@+id/action_augmented_reality_monthly"
+        android:orderInCategory="100"
+        app:showAsAction="never"
+        android:title="@string/action_augmented_reality_monthly"/>
+
+    <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
         app:showAsAction="never"

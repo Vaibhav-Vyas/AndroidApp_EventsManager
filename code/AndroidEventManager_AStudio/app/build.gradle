@@ -36,6 +36,7 @@ repositories {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:21.0.3'
+    compile 'com.android.support:support-v4:21.0.0'
 
     compile 'net.callumtaylor:asynchttpclient:1.5'
     compile 'com.github.satyan:sugar:1.3'
