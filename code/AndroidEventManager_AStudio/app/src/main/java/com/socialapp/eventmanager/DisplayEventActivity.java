@@ -155,14 +155,24 @@ public class DisplayEventActivity extends ActionBarActivity {
                 events = Event.find(Event.class, "eventId = ?", queryargs, null, "startTime",null);
                 Event currEvent = events.get(0); // Taking only the first event
                 event = currEvent;
+
                 invitees = currEvent.getInvitees();
+                int found = 0;
                 for (i=0;i<invitees.size();i++){
                     current_invitee = invitees.get(i);
                     if(current_invitee.name.equals(invitee_name)){
+                        found = 1;
+                        Log.d(TAG,"Got the invitee name, response =  " + response);
                         current_invitee.status=response;
                         current_invitee.save();
                     }
                 }
+
+                if(found==0){
+                    Log.d(TAG, "Invitee not found, name = " + invitee_name);
+                }
+
+
                 showEventOnUI(true);
             }
 
@@ -289,10 +299,12 @@ public class DisplayEventActivity extends ActionBarActivity {
                 event.status = response;
                 break;
             case R.id.maybe:
-                response = "undecided";
+                response = "maybe";
+                event.status = "invited";
                 break;
         }
 
+        event.save();
         Backend.respondToInvite(email, event.event_id, response, new Backend.BackendCallback() {
             @Override
             public void onRequestCompleted(final String result) {
@@ -343,8 +355,8 @@ public class DisplayEventActivity extends ActionBarActivity {
                 String invitedFriendName = invitedContactsMap.get(invitedFriendEmail).toString();
                 Invitee invitee = new Invitee();
 
-                invitee.name =  (null == invitedFriendName) ?
-                        " " : invitedFriendName;
+                invitee.name =  (null == invitedFriendEmail) ?
+                        " " : invitedFriendEmail;
                 invitee.event = event;
                 invitee.status = "invited";
                 Log.d(TAG, "Saving the invitee = " + invitee.name);
