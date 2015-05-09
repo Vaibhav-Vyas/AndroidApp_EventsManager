@@ -43,9 +43,12 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 
 
 public class DisplayEventActivity extends ActionBarActivity {
@@ -58,6 +61,7 @@ public class DisplayEventActivity extends ActionBarActivity {
     Button inviteeStatusButton;
 
     private static final String TAG = "DisplayEventActivity";
+    private static final int CONTACT_SELECT_REQUEST = 1;  // The request code
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -304,46 +308,70 @@ public class DisplayEventActivity extends ActionBarActivity {
 
 
     public void add_friends(View view) {
+        // Cleanup Selected Contacts state.
+        ContactsRetriever.invitedContactsMap.clear();
         Intent intent = new Intent(this, ContactSelectorActivity.class);
-        startActivity(intent);
-
-        ArrayList<String> friends_to_invite=new ArrayList<String>();
-        friends_to_invite.add("abc");
-        String friends_to_invite_string = "";
-
-        for(int i=0;i<friends_to_invite.size();i++){
-            Invitee invitee = new Invitee();
-            invitee.name = friends_to_invite.get(i);
-            invitee.event = event;
-            invitee.status = "invited";
-            Log.d(TAG, "Saving the invitee = " + invitee.name);
-            invitee.save();
-            friends_to_invite_string += friends_to_invite.get(i) +",";
-        }
-        friends_to_invite_string = friends_to_invite_string.substring(0,friends_to_invite_string.length()-1);
-
-        Backend.InviteFriends(event, friends_to_invite_string, new Backend.BackendCallback() {
-            @Override
-            public void onRequestCompleted(final String result) {
-                runOnUiThread(new Runnable() {
-                        public void run() {
-                            Toast.makeText(getApplicationContext(), result, Toast.LENGTH_SHORT).show();
-                    }
-                    });
-            }
-
-            @Override
-            public void onRequestFailed(final String message) {
-                runOnUiThread(new Runnable() {
-                    public void run() {
-                        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
-        });
+        startActivityForResult(intent, CONTACT_SELECT_REQUEST);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        // When an Image is picked
+        if (requestCode == CONTACT_SELECT_REQUEST && resultCode == RESULT_OK) {
 
+            // Get the selected contacts from Intent data.
+            // HashMap<String, String> hashMap = (HashMap<String, String>)data.getSerializableExtra("contactsSelected");
+            Log.d(TAG, "Successfully returned from ContactSelectorActivity.");
+
+            HashMap<String, String > invitedContactsMap = ContactsRetriever.invitedContactsMap;
+            Set<String> friends_to_invite = invitedContactsMap.keySet();
+            String friends_to_invite_string = "";
+
+            for (String invitedFriendEmail : friends_to_invite)
+            {
+                String invitedFriendName = invitedContactsMap.get(invitedFriendEmail).toString();
+                Invitee invitee = new Invitee();
+
+                invitee.name =  (null == invitedFriendName) ?
+                        " " : invitedFriendName;
+                invitee.event = event;
+                invitee.status = "invited";
+                Log.d(TAG, "Saving the invitee = " + invitee.name);
+                invitee.save();
+                friends_to_invite_string += invitedFriendEmail +",";
+            }
+            friends_to_invite_string = friends_to_invite_string.length() > 0 ?
+                    friends_to_invite_string.substring(0,friends_to_invite_string.length()-1) : " ";
+
+            Toast.makeText(getApplicationContext(), "Invited friends email ID includes: " + friends_to_invite_string, Toast.LENGTH_SHORT).show();
+
+            Backend.InviteFriends(event, friends_to_invite_string, new Backend.BackendCallback() {
+                @Override
+                public void onRequestCompleted(final String result) {
+                    runOnUiThread(new Runnable() {
+                        public void run() {
+                            Toast.makeText(getApplicationContext(), result, Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+
+                @Override
+                public void onRequestFailed(final String message) {
+                    runOnUiThread(new Runnable() {
+                        public void run() {
+                            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            });
+            // ==========
+
+        } else {
+            Toast.makeText(this, "Invalid result or error code for ContactSelectorActivity",
+                    Toast.LENGTH_LONG).show();
+        }
+    }
 
     private void saveImageToGallery(Event event){
         try {

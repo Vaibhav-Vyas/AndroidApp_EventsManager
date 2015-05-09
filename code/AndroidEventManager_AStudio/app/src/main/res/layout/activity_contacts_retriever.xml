@@ -8,12 +8,26 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:id="@+id/searchBoxInput"/>
-<Button
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:onClick="searchContactsInfo"
-    android:id="@+id/searchContacts"
-    android:text="Show contacts" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="searchContactsInfo"
+            android:id="@+id/searchContacts"
+            android:text="Show contacts" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="returnContactsInfo"
+            android:id="@+id/returnContacts"
+            android:text="Done"
+            android:layout_alignParentRight="true"/>
+    </RelativeLayout>
+
 <TextView android:id="@+id/sample_output"
         android:text="@string/intro_message"
         android:layout_width="match_parent"

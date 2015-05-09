@@ -246,7 +246,6 @@ public class LoginActivity extends FragmentActivity {
             });
 
         }
-
     }
 
 
@@ -260,31 +259,14 @@ public class LoginActivity extends FragmentActivity {
         String email = emailView.getText().toString();
         String password = pwView.getText().toString();
 
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString("email", emailView.getText().toString());
+        editor.commit();
 
-
-
-              SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-              SharedPreferences.Editor editor = prefs.edit();
-              editor.putString("email", emailView.getText().toString());
-              editor.commit();
-
-              Intent intent = new Intent(currContext, MainActivity.class);
-              startActivity(intent);
-
-
-
+        Intent intent = new Intent(currContext, MainActivity.class);
+        startActivity(intent);
     }
-
-
-
-
-
-
-
-
-
-
-
 
     public void signup(View view){
 

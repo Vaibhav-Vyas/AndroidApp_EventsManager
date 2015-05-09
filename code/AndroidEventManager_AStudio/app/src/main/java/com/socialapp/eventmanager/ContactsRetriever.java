@@ -48,7 +48,7 @@ public class ContactsRetriever implements LoaderManager.LoaderCallbacks<Cursor> 
     }
 
     // create map to emails
-    public static Map<String, String > emailMap = new HashMap<String, String>();
+    public static HashMap<String, String > invitedContactsMap = new HashMap<String, String>();
 
     @Override
     public Loader<Cursor> onCreateLoader(int loaderIndex, Bundle args) {
@@ -95,7 +95,7 @@ public class ContactsRetriever implements LoaderManager.LoaderCallbacks<Cursor> 
         }
 
         // Sort results such that rows for the same contact stay together.
-        String sortBy = CommonDataKinds.Contactables.LOOKUP_KEY;
+        String sortBy = CommonDataKinds.Contactables.DISPLAY_NAME;
 
         return new CursorLoader(
                 mContext,  // Context
@@ -218,22 +218,23 @@ public class ContactsRetriever implements LoaderManager.LoaderCallbacks<Cursor> 
             QuickContactBadge iv= (QuickContactBadge)phoneContactView.findViewById(R.id.icon);
 
             CheckBox satView = (CheckBox) phoneContactView.findViewById(R.id.checkBoxSelectContact);
-            satView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-
+            satView.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
-                    String emailId = ((TextView) buttonView.getRootView ().findViewById(R.id.emailId)).getText().toString();
-                    String contactName = ((TextView) buttonView.getRootView().findViewById(R.id.contactName)).getText().toString();
-                    if (buttonView.isChecked()) {
+                public void onClick(View view) {
+                    View parentView = (View)((CheckBox) view).getParent();
+                    TextView textViewEmailId = ((TextView) parentView.findViewById(R.id.emailId));
+                    String emailId = textViewEmailId.getText().toString();
+                    String contactName = ((TextView) parentView.findViewById(R.id.contactName)).getText().toString();
+                    CheckBox checkBoxSelectContact = (CheckBox) parentView.findViewById(R.id.checkBoxSelectContact);
+                    if (checkBoxSelectContact.isChecked()) {
                         // if checked, then add to hashMap
-                        emailMap.put(emailId, contactName);
-                        Toast.makeText((mContext), "Added the key " + emailId + ", contact name = " + contactName, Toast.LENGTH_SHORT).show();
+                        invitedContactsMap.put(emailId, contactName);
+                        Toast.makeText((mContext), "Added emailID: " + emailId + ", Contact name = " + contactName + " to the invitee list", Toast.LENGTH_SHORT).show();
 
                     } else {
                         // un-checked, then remove from hashMap
-                        emailMap.remove(buttonView.getRootView().findViewById(R.id.emailId));
-                        Toast.makeText((mContext), "Removed the key " + emailId + ", contact name = " + contactName, Toast.LENGTH_SHORT).show();
+                        invitedContactsMap.remove(emailId);
+                        Toast.makeText((mContext), "Removed emailID: " + emailId + ", Contact name = " + contactName + " from the invitee list", Toast.LENGTH_SHORT).show();
                     }
                 }
             });

@@ -1,6 +1,7 @@
 package com.socialapp.eventmanager;
 
 import android.app.SearchManager;
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -51,6 +52,13 @@ public class ContactSelectorActivity extends ActionBarActivity {
         if (mEdit.getText().length() >= 3 ) {
             searchContactsInfo(view, false);
         }
+    }
+
+    public void returnContactsInfo(View view){
+        Intent i = getIntent();
+        i.putExtra("contactsSelected", ContactsRetriever.invitedContactsMap);
+        setResult(RESULT_OK, i);
+        finish();
     }
 
     public void searchContactsInfo(View view, boolean firstRunOnCreate)
