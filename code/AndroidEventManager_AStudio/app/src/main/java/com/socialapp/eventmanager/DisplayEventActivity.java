@@ -238,6 +238,16 @@ public class DisplayEventActivity extends ActionBarActivity {
         {
             tv = (TextView)findViewById(R.id.eventDetails);
             tv.setText(event.description);
+            if(event.description.length() < 150)
+            {
+                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+                        RelativeLayout.LayoutParams.WRAP_CONTENT,
+                        RelativeLayout.LayoutParams.WRAP_CONTENT
+                );
+                float d = this.getResources().getDisplayMetrics().density;
+                params.setMargins((int)(52*d), (int)(10*d), 0, (int)(10*d));
+                tv.setLayoutParams(params);
+            }
         }
         else
         {

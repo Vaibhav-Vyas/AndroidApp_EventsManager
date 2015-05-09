@@ -130,7 +130,7 @@
                     android:src="@drawable/location_icon"
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="10dp"
-                    android:layout_marginRight="15dp"
+                    android:layout_marginRight="17dp"
                     android:layout_marginBottom="10dp" />
 
                 <TextView
@@ -174,7 +174,8 @@
                     android:hint="Details"
                     android:padding="5dp"
                     android:textSize="18dp"
-                    android:id="@+id/textView3"/>
+                    android:id="@+id/textView3"
+                    android:visibility="gone"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -183,7 +184,9 @@
                     android:textSize="15dp"
                     android:layout_below="@+id/textView3"
                     android:paddingBottom="5dp"
-                    android:paddingLeft="5dp" />
+                    android:paddingLeft="5dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp" />
 
             </RelativeLayout>
 
