@@ -47,6 +47,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.Arrays;
+import java.util.HashMap;
 
 public class SplashFragment extends Fragment {
 
@@ -54,6 +55,8 @@ public class SplashFragment extends Fragment {
     private TextView skipLoginButton;
     private SkipLoginCallback skipLoginCallback;
     private CallbackManager callbackManager;
+    // create map for Facebook friends lists
+    public static HashMap<String, String > friendsUsingApp = new HashMap<String, String>();
 
     public interface SkipLoginCallback {
         void onSkipLoginPressed();
@@ -98,6 +101,9 @@ public class SplashFragment extends Fragment {
                                         try {
                                             Log.i("Info Msg:", "Logged in Users FB id = ." + jsonObject.getString("id"));
                                             Log.i("Info Msg:", "Logged in Users FB name = ." + jsonObject.getString("name"));
+
+                                            friendsUsingApp.put(jsonObject.getString("id"),
+                                                    jsonObject.getString("name"));
                                         }
                                         catch (Exception e)
                                         {
@@ -131,10 +137,12 @@ public class SplashFragment extends Fragment {
                                             GraphResponse response) {
 
                                         try {
+                                            friendsUsingApp.clear();
                                             for (int i = 0; i < jsonArray.length(); i++) {
                                                 Log.i("Info Msg:", "id = ." + jsonArray.getJSONObject(i).getString("id"));
                                                 Log.i("Info Msg:", "name = ." + jsonArray.getJSONObject(i).getString("name"));
-
+                                                friendsUsingApp.put(jsonArray.getJSONObject(i).getString("id"),
+                                                        jsonArray.getJSONObject(i).getString("name"));
                                             }
 
                                             Log.i("Info Msg:", "Response = ." + response.toString());

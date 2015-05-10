@@ -201,7 +201,7 @@ public class ContactsRetriever implements LoaderManager.LoaderCallbacks<Cursor> 
             });
 
             Random rnd = new Random();
-            int transparency = 160;
+            int transparency = 75;
             int color = Color.argb(transparency, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
 
             View view = (RelativeLayout)  phoneContactView.findViewById(R.id.phoneContactEntry);

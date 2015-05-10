@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/background_main">
 <EditText
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
@@ -26,7 +27,28 @@
             android:id="@+id/returnContacts"
             android:text="Done"
             android:layout_alignParentRight="true"/>
+
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="FB Contacts"
+            android:id="@+id/showFBContactsChkBox"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@+id/searchContacts"
+            android:layout_toEndOf="@+id/searchContacts"
+            android:checked="true"/>
+
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Phone Contacts"
+            android:id="@+id/showPhoneContactsChkBox"
+            android:layout_below="@+id/showFBContactsChkBox"
+            android:layout_toRightOf="@+id/searchContacts"
+            android:layout_toEndOf="@+id/searchContacts"
+            android:checked="true"/>
     </RelativeLayout>
+
 
 <TextView android:id="@+id/sample_output"
         android:text="@string/intro_message"
@@ -35,7 +57,6 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:fontFamily="sans-serif"
-        android:paddingBottom="40dp"
         />
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
