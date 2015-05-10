@@ -267,6 +267,7 @@ public class CreateEventActivity extends FragmentActivity {
                                 String eventJSON = gson.toJson(event, Event.class);
                                 intent.putExtra("event", eventJSON);
                                 intent.putExtra("location", "local");
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                 startActivity(intent);
                                 //addEventToCalender(event);
                             } catch (Throwable t) {
@@ -290,13 +291,48 @@ public class CreateEventActivity extends FragmentActivity {
             });
         }
         else {
-            Gson gson = new GsonBuilder().create();
-            Intent intent = new Intent(getApplicationContext(), DisplayEventActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            String eventJSON = gson.toJson(event, Event.class);
-            intent.putExtra("event", eventJSON);
-            intent.putExtra("location", "local");
-            startActivity(intent);
+            event.save();
+            Backend.editEvent(event, new Backend.CreateEventCallback() {
+                @Override
+                public void onRequestCompleted(final String result) {
+                    runOnUiThread(new Runnable() {
+                        public void run() {
+                            try {
+                                //JSONObject obj = new JSONObject(result);
+                                event.save();
+
+                                Toast.makeText(getApplicationContext(), result, Toast.LENGTH_SHORT).show();
+                                if (event.image_url != null) {
+                                    sendEventImageToBackend(event);
+                                }
+
+                                Gson gson = new GsonBuilder().create();
+                                Intent intent = new Intent(getApplicationContext(), DisplayEventActivity.class);
+                                String eventJSON = gson.toJson(event, Event.class);
+                                intent.putExtra("event", eventJSON);
+                                intent.putExtra("location", "local");
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                startActivity(intent);
+                                //addEventToCalender(event);
+                            } catch (Throwable t) {
+                                Log.d(TAG, "Error converting result to json in edit event");
+                            }
+                        }
+                    });
+                }
+
+                @Override
+                public void onRequestFailed(final String message) {
+                    //NOTE: parameter validation and filtering is handled by the backend, just show the
+                    //returned error message to the user
+                    Log.d(TAG, "Received error from Backend: " + message);
+                    runOnUiThread(new Runnable() {
+                        public void run() {
+                            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            });
         }
     }
 

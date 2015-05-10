@@ -160,6 +160,57 @@ public class DisplayEventActivity extends Activity {
 
 
                 showEventOnUI(true);
+            }else if(type.equals("3")){
+                String eventid = getIntent().getStringExtra("eventId");
+                final List<Event> events;
+                String[] queryargs;
+                queryargs = new String[1];
+                queryargs[0]=eventid;
+
+                events = Event.find(Event.class, "eventId = ?", queryargs, null, "startTime",null);
+                Event currEvent = events.get(0); // Taking only the first event
+                event = currEvent;
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                String email = prefs.getString("email", null);
+                Backend.getEventFromServer(event.event_id, email, new Backend.BackendCallback() {
+                    @Override
+                    public void onRequestCompleted(final String result) {
+                        try {
+                            System.out.println("Result is : " + result);
+                            JSONObject obj = new JSONObject(result);
+                            event.owner = obj.getString("owner");
+                            event.name = obj.getString("name");
+                            event.description = obj.getString("description");
+                            event.location = obj.getString("location");
+                            event.image_url = obj.getString("imageUrl");
+                            event.start_time = Long.parseLong(obj.getString("startTime"));
+                            event.end_time = Long.parseLong(obj.getString("endTime"));
+                            event.organization = obj.getString("organization");
+                            event.status = "invited";
+                            Log.d(TAG, "Image url: " + event.image_url);
+                            if (event.image_url != "") {
+                                saveImageToGallery(event);
+                            }
+                            event.save();
+                            runOnUiThread(new Runnable() {
+                                public void run() {
+                                    showEventOnUI(false);
+                                }
+                            });
+                        } catch (Throwable t) {
+                            Log.d(TAG, "Error converting result to json");
+                        }
+                    }
+
+                    @Override
+                    public void onRequestFailed(final String message) {
+                        runOnUiThread(new Runnable() {
+                            public void run() {
+                                Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                });
             }
 
         }
@@ -312,12 +363,51 @@ public class DisplayEventActivity extends Activity {
             .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int whichButton) {
                     Log.d(TAG, "Deleted event " + event.name);
-                    //deleteEventFromBackend(event);
-                    event.delete();
+                    deleteEventFromBackend();
                 }
             })
             .setNegativeButton(android.R.string.no, null).show();
     }
+
+    public void deleteEventFromBackend(){
+        Backend.deleteEvent(event, new Backend.CreateEventCallback() {
+            @Override
+            public void onRequestCompleted(final String result) {
+                runOnUiThread(new Runnable() {
+                    public void run() {
+                        try {
+                            //JSONObject obj = new JSONObject(result);
+                            Toast.makeText(getApplicationContext(), result, Toast.LENGTH_SHORT).show();
+                            event.delete();
+                            finish();
+                            //if (event.image_url != null) {
+                            //  sendEventImageToBackend(event);
+                            //}
+
+                        } catch (Throwable t) {
+                            Log.d(TAG, "Error converting result to json in delete event");
+                        }
+                    }
+                });
+            }
+
+            @Override
+            public void onRequestFailed(final String message) {
+                //NOTE: parameter validation and filtering is handled by the backend, just show the
+                //returned error message to the user
+                Log.d(TAG, "Received error from Backend: " + message);
+                runOnUiThread(new Runnable() {
+                    public void run() {
+                        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
+    }
+
+
+
+
 
     public void onEditClick(final View v) {
         Intent intent = new Intent(getApplicationContext(), CreateEventActivity.class);

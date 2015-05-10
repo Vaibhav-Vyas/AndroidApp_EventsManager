@@ -269,6 +269,113 @@ public class Backend {
         });
     }
 
+
+    public static void editEvent(Event event, final CreateEventCallback callback) {
+        AsyncHttpClient client = new AsyncHttpClient(SERVER_URL);
+        StringEntity jsonParams = null;
+
+        try {
+            JSONObject json = new JSONObject();
+            //json.put("email", email);
+            //json.put("password", password);
+            jsonParams = new StringEntity(json.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        List<Header> headers = new ArrayList<Header>();
+        headers.add(new BasicHeader("Accept", "application/json"));
+        headers.add(new BasicHeader("Content-Type", "application/json"));
+
+
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        params.add(new BasicNameValuePair("name",event.name));
+        params.add(new BasicNameValuePair("description",event.description));
+        params.add(new BasicNameValuePair("location",event.location));
+        params.add(new BasicNameValuePair("email",event.owner));
+        params.add(new BasicNameValuePair("startTime", "" + event.start_time));
+        params.add(new BasicNameValuePair("endTime", "" + event.end_time));
+        params.add(new BasicNameValuePair("eventId", "" + event.event_id));
+
+
+        client.get("events/edit", params, headers, new JsonResponseHandler() {
+            @Override public void onSuccess() {
+                JsonObject result = getContent().getAsJsonObject();
+
+
+                // result.addProperty("backendId", result.get("id").toString());
+                //result.remove("id");
+
+                Log.d(TAG, "Edit event returned: " + result.get("msg").toString());
+                // Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").create();
+                //  User user = gson.fromJson(result, User.class);
+
+                callback.onRequestCompleted(result.toString());
+            }
+
+            @Override
+            public void onFailure() {
+                callback.onRequestFailed(handleFailure(getContent()));
+            }
+        });
+    }
+
+
+    public static void deleteEvent(Event event, final CreateEventCallback callback) {
+        AsyncHttpClient client = new AsyncHttpClient(SERVER_URL);
+        StringEntity jsonParams = null;
+
+        try {
+            JSONObject json = new JSONObject();
+            //json.put("email", email);
+            //json.put("password", password);
+            jsonParams = new StringEntity(json.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        List<Header> headers = new ArrayList<Header>();
+        headers.add(new BasicHeader("Accept", "application/json"));
+        headers.add(new BasicHeader("Content-Type", "application/json"));
+
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        params.add(new BasicNameValuePair("email",event.owner));
+        params.add(new BasicNameValuePair("eventId", "" + event.event_id));
+
+
+        client.get("events/delete", params, headers, new JsonResponseHandler() {
+            @Override public void onSuccess() {
+                JsonObject result = getContent().getAsJsonObject();
+
+
+                // result.addProperty("backendId", result.get("id").toString());
+                //result.remove("id");
+
+                Log.d(TAG, "Delete event returned: " + result.get("msg").toString());
+                // Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").create();
+                //  User user = gson.fromJson(result, User.class);
+
+                callback.onRequestCompleted(result.toString());
+            }
+
+            @Override
+            public void onFailure() {
+                callback.onRequestFailed(handleFailure(getContent()));
+            }
+        });
+    }
+
+
+
+
+
+
+
+
+
+
+
+
     public static void sendRegistrationIdToBackend(String email, String regId, final BackendCallback callback) {
         AsyncHttpClient client = new AsyncHttpClient(SERVER_URL);
         StringEntity jsonParams = null;

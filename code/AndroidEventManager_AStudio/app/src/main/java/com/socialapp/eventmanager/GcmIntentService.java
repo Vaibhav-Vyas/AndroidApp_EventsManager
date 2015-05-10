@@ -12,6 +12,9 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.socialapp.eventmanager.Models.Event;
+
+import java.util.List;
 
 public class GcmIntentService extends IntentService {
     public static final int NOTIFICATION_ID = 1;
@@ -81,9 +84,102 @@ public class GcmIntentService extends IntentService {
                 break;
             case "2":
                 responseFromInvitee(msg,type);
+                break;
+            case "3": // edit
+                updatedEvent(msg,type);
+                break;
+            case "4":
+                deletedEvent(msg,type);
+                break;
         }
 
     }
+
+
+    private void updatedEvent(Bundle msg,String type)
+    {
+        String invitedBy = msg.getString("invitedBy");
+        String eventName = msg.getString("eventName");
+        String eventId = msg.getString("eventId");
+
+
+        mNotificationManager = (NotificationManager)this.getSystemService(Context.NOTIFICATION_SERVICE);
+
+        Intent displayActivityIntent = new Intent(this, DisplayEventActivity.class);
+        displayActivityIntent.putExtra("eventId", eventId);
+        displayActivityIntent.putExtra("location", "server");
+        displayActivityIntent.putExtra("invitedBy", invitedBy);
+        displayActivityIntent.putExtra("type",type);
+
+        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, displayActivityIntent , PendingIntent.FLAG_CANCEL_CURRENT);
+
+
+
+
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(this)
+                        .setSmallIcon(R.drawable.plus)   //TODO: change this icon
+                        .setContentTitle(invitedBy + " updated event " + eventName)
+                        .setStyle(new NotificationCompat.BigTextStyle()
+                                .bigText(eventId))
+                        .setContentText(eventId);
+
+        mBuilder.setContentIntent(contentIntent);
+        mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
+
+        Log.d(TAG, "Notification displayed :" + invitedBy + " updated event " + eventName);
+
+    }
+
+    private void deletedEvent(Bundle msg,String type)
+    {
+        String invitedBy = msg.getString("invitedBy");
+        String eventName = msg.getString("eventName");
+        String eventId = msg.getString("eventId");
+
+
+        mNotificationManager = (NotificationManager)this.getSystemService(Context.NOTIFICATION_SERVICE);
+
+        Intent displayActivityIntent = new Intent(this, MainActivity.class);
+        //displayActivityIntent.putExtra("eventId", eventId);
+        //displayActivityIntent.putExtra("location", "server");
+        //displayActivityIntent.putExtra("type",type);
+
+        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, displayActivityIntent , PendingIntent.FLAG_CANCEL_CURRENT);
+
+        String[] queryargs;
+        queryargs = new String[1];
+        queryargs[0]=eventId;
+        final List<Event> events;
+
+        events = Event.find(Event.class, "eventId = ?", queryargs, null, "startTime", null);
+        Event currEvent = events.get(0); // Taking only the first event
+
+        currEvent.delete();
+
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(this)
+                        .setSmallIcon(R.drawable.plus)   //TODO: change this icon
+                        .setContentTitle(invitedBy + " invited you to " + eventName)
+                        .setStyle(new NotificationCompat.BigTextStyle()
+                                .bigText(eventId))
+                        .setContentText(eventId);
+
+        mBuilder.setContentIntent(contentIntent);
+        mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
+
+        Log.d(TAG, "Notification displayed :" + invitedBy + " deleted event " + eventName);
+
+    }
+
+
+
+
+
+
+
+
+
 
     private void responseFromInvitee(Bundle msg, String type)
     {
