@@ -71,7 +71,6 @@ public class MainActivity extends ActionBarActivity
 
     private static final String TAG = "Sujith";
 
-    //private HorizontalScrollView imageScrollView;
     final String drawerTitle = "Navigation";
     DrawerLayout drawerLayout;
     ActionBarDrawerToggle drawerToggle;
@@ -121,9 +120,6 @@ public class MainActivity extends ActionBarActivity
         } else {
             Log.i(TAG, "No valid Google Play Services APK found.");
         }
-
-        //imageScrollView = (HorizontalScrollView)findViewById (R.id.image_scrollView);
-
 
         ////////////////////////////////////////////////////////////////////////////
         ////////////////////////// DRAWER //////////////////////////////////////////
@@ -178,6 +174,7 @@ public class MainActivity extends ActionBarActivity
             @Override
             public void onPageSelected(int position) {
                 getSupportActionBar().setSelectedNavigationItem(position);
+                ((TabsPagerAdapter)viewPager.getAdapter()).getFragment(tabPos).updateEventsList(drawerList.getCheckedItemPosition());
             }
 
             @Override
@@ -367,9 +364,7 @@ public class MainActivity extends ActionBarActivity
     @Override
     public void onTabSelected(Tab tab, FragmentTransaction ft) {
         viewPager.setCurrentItem(tab.getPosition());
-        int newPos = tab.getPosition();
-        //imageScrollView.smoothScrollBy(250 * (newPos - tabPos), 0);
-        tabPos = newPos;
+        tabPos = tab.getPosition();
     }
 
     @Override
@@ -419,6 +414,7 @@ public class MainActivity extends ActionBarActivity
         }
         else if(id == R.id.action_add)  {
             Intent intent = new Intent(this, CreateEventActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
             startActivity(intent);
         }
         else if(id == R.id.action_augmented_reality_today)  {

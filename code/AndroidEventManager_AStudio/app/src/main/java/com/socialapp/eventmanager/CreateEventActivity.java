@@ -39,6 +39,7 @@ import java.io.FileDescriptor;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import com.google.gson.Gson;
@@ -56,9 +57,9 @@ public class CreateEventActivity extends FragmentActivity {
     private Button endTimeButton;
     private Switch public_private_switch;
     private Switch invitation_allowed_switch;
-
     Calendar start, end;
 
+    private Event editedEvent = null;
 
 
 
@@ -82,6 +83,32 @@ public class CreateEventActivity extends FragmentActivity {
         endDateButton.setText(new SimpleDateFormat("MM/dd/yyyy").format(end.getTime()));
         startTimeButton.setText(new SimpleDateFormat("hh:mm aa").format(start.getTime()));
         endTimeButton.setText(new SimpleDateFormat("hh:mm aa").format(end.getTime()));
+
+        initializeIfEditingEvent();
+    }
+
+    public void initializeIfEditingEvent()
+    {
+        String eventId = getIntent().getStringExtra("editEvent");
+        if(eventId != null)
+        {
+            String[] queryArgs = new String[1];
+            queryArgs[0] = "" + eventId;
+            editedEvent = Event.find(Event.class, "eventId = ?", queryArgs, null, null, null).get(0);
+            ((EditText)findViewById(R.id.event_name)).setText(editedEvent.name);
+            ((EditText)findViewById(R.id.event_location)).setText(editedEvent.location);
+            ((EditText)findViewById(R.id.event_description)).setText(editedEvent.description);
+
+            start.setTimeInMillis(editedEvent.start_time);
+            end.setTimeInMillis(editedEvent.end_time);
+            public_private_switch.setChecked(editedEvent.public_event);
+            invitation_allowed_switch.setChecked(editedEvent.invitation_allowed);
+            startDateButton.setText(new SimpleDateFormat("MM/dd/yyyy").format(start.getTime()));
+            endDateButton.setText(new SimpleDateFormat("MM/dd/yyyy").format(end.getTime()));
+            startTimeButton.setText(new SimpleDateFormat("hh:mm aa").format(start.getTime()));
+            endTimeButton.setText(new SimpleDateFormat("hh:mm aa").format(end.getTime()));
+            ((TextView)findViewById(R.id.create_event_button)).setText("Save");
+        }
     }
 
     public void onClick(final View v)
@@ -182,7 +209,7 @@ public class CreateEventActivity extends FragmentActivity {
                 break;
 
             case R.id.create_event_button:
-                final Event event = new Event();
+                final Event event = (editedEvent == null) ? new Event() : editedEvent;
 
                 EditText editText = (EditText)findViewById(R.id.event_name);
                 event.name= editText.getText().toString();
@@ -219,49 +246,58 @@ public class CreateEventActivity extends FragmentActivity {
 
     public void saveEventToBackend(final Event event)
     {
-        Backend.createEvent(event, new Backend.CreateEventCallback() {
-            @Override
-            public void onRequestCompleted(final String result) {
-                runOnUiThread(new Runnable() {
-                    public void run() {
-                        try {
-                            JSONObject obj = new JSONObject(result);
-                            event.event_id = obj.getString("eventId");
-                            event.save();
+        if(editedEvent == null) {
+            Backend.createEvent(event, new Backend.CreateEventCallback() {
+                @Override
+                public void onRequestCompleted(final String result) {
+                    runOnUiThread(new Runnable() {
+                        public void run() {
+                            try {
+                                JSONObject obj = new JSONObject(result);
+                                event.event_id = obj.getString("eventId");
+                                event.save();
 
-                            Toast.makeText(getApplicationContext(), result, Toast.LENGTH_SHORT).show();
-                            if(event.image_url != null)
-                            {
-                                sendEventImageToBackend(event);
+                                Toast.makeText(getApplicationContext(), result, Toast.LENGTH_SHORT).show();
+                                if (event.image_url != null) {
+                                    sendEventImageToBackend(event);
+                                }
+
+                                Gson gson = new GsonBuilder().create();
+                                Intent intent = new Intent(getApplicationContext(), DisplayEventActivity.class);
+                                String eventJSON = gson.toJson(event, Event.class);
+                                intent.putExtra("event", eventJSON);
+                                intent.putExtra("location", "local");
+                                startActivity(intent);
+                                //addEventToCalender(event);
+                            } catch (Throwable t) {
+                                Log.d(TAG, "Error converting result to json");
                             }
+                        }
+                    });
+                }
 
-                            Gson gson = new GsonBuilder().create();
-                            Intent intent = new Intent(getApplicationContext(), DisplayEventActivity.class);
-                            String eventJSON=gson.toJson(event,Event.class);
-                            intent.putExtra("event", eventJSON);
-                            intent.putExtra("location", "local");
-                            startActivity(intent);
-                            //addEventToCalender(event);
+                @Override
+                public void onRequestFailed(final String message) {
+                    //NOTE: parameter validation and filtering is handled by the backend, just show the
+                    //returned error message to the user
+                    Log.d(TAG, "Received error from Backend: " + message);
+                    runOnUiThread(new Runnable() {
+                        public void run() {
+                            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
                         }
-                        catch(Throwable t)
-                        {
-                            Log.d(TAG, "Error converting result to json");
-                        }
-                    }
-                });
-            }
-            @Override
-            public void onRequestFailed(final String message) {
-                //NOTE: parameter validation and filtering is handled by the backend, just show the
-                //returned error message to the user
-                Log.d(TAG, "Received error from Backend: " + message);
-                runOnUiThread(new Runnable() {
-                    public void run() {
-                        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
-        });
+                    });
+                }
+            });
+        }
+        else {
+            Gson gson = new GsonBuilder().create();
+            Intent intent = new Intent(getApplicationContext(), DisplayEventActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            String eventJSON = gson.toJson(event, Event.class);
+            intent.putExtra("event", eventJSON);
+            intent.putExtra("location", "local");
+            startActivity(intent);
+        }
     }
 
     public void sendEventImageToBackend(final Event event)

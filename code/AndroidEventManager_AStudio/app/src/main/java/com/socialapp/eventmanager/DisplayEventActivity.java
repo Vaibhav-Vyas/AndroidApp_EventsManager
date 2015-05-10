@@ -1,6 +1,7 @@
 package com.socialapp.eventmanager;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -303,8 +304,30 @@ public class DisplayEventActivity extends Activity {
         dialog.show();
     }
 
+    public void onDeleteClick(final View v) {
+        new AlertDialog.Builder(this)
+            .setTitle("Delete " + event.name)
+            .setMessage("Are you sure you want to delete this event?")
+            .setIcon(android.R.drawable.ic_dialog_alert)
+            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    Log.d(TAG, "Deleted event " + event.name);
+                    //deleteEventFromBackend(event);
+                    event.delete();
+                }
+            })
+            .setNegativeButton(android.R.string.no, null).show();
+    }
 
-    public void onClick(final View v) {
+    public void onEditClick(final View v) {
+        Intent intent = new Intent(getApplicationContext(), CreateEventActivity.class);
+        intent.putExtra("editEvent", event.event_id );
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+        startActivity(intent);
+    }
+
+
+    public void onResponseClick(final View v) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String email = prefs.getString("email", null);
         String response = null;

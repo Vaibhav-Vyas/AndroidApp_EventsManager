@@ -400,6 +400,7 @@
                 android:layout_gravity="center"
                 android:padding="10dp"
                 android:textSize="20dp"
+                android:onClick="onEditClick"
                 android:background="@drawable/text_button_states"/>
             <View
                 android:layout_width="1dp"
@@ -418,6 +419,7 @@
                 android:gravity="center"
                 android:padding="10dp"
                 android:textSize="20dp"
+                android:onClick="onDeleteClick"
                 android:background="@drawable/text_button_states"/>
         </LinearLayout>
 
@@ -435,7 +437,7 @@
                 android:id="@+id/accept"
                 android:gravity="center"
                 android:layout_gravity="center"
-                android:onClick="onClick"
+                android:onClick="onResponseClick"
                 android:padding="10dp"
                 android:background="@drawable/text_button_states"
                 android:textSize="20dp" />
@@ -454,7 +456,7 @@
                 android:id="@+id/decline"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:onClick="onClick"
+                android:onClick="onResponseClick"
                 android:padding="10dp"
                 android:background="@drawable/text_button_states"
                 android:textSize="20dp" />
@@ -473,7 +475,7 @@
                 android:id="@+id/maybe"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:onClick="onClick"
+                android:onClick="onResponseClick"
                 android:padding="10dp"
                 android:background="@drawable/text_button_states"
                 android:textSize="20dp" />
