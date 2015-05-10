@@ -412,7 +412,6 @@ public class DisplayEventActivity extends Activity {
     public void onEditClick(final View v) {
         Intent intent = new Intent(getApplicationContext(), CreateEventActivity.class);
         intent.putExtra("editEvent", event.event_id );
-        intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
         startActivity(intent);
     }
 

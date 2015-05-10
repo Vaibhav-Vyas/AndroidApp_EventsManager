@@ -51,7 +51,7 @@
                 android:layout_height="wrap_content"
                 android:padding="4px"
                 android:hint="Description"
-                android:inputType="textCapWords|textMultiLine"
+                android:inputType="textCapSentences|textMultiLine"
                 android:layout_marginBottom="10dp"
                 android:maxLines="4"
                 android:minLines="1"

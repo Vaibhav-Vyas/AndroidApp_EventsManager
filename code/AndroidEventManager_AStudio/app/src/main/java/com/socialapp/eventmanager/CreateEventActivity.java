@@ -269,6 +269,7 @@ public class CreateEventActivity extends FragmentActivity {
                                 intent.putExtra("location", "local");
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                 startActivity(intent);
+                                finish();
                                 //addEventToCalender(event);
                             } catch (Throwable t) {
                                 Log.d(TAG, "Error converting result to json");
@@ -313,6 +314,7 @@ public class CreateEventActivity extends FragmentActivity {
                                 intent.putExtra("location", "local");
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                 startActivity(intent);
+                                finish();
                                 //addEventToCalender(event);
                             } catch (Throwable t) {
                                 Log.d(TAG, "Error converting result to json in edit event");

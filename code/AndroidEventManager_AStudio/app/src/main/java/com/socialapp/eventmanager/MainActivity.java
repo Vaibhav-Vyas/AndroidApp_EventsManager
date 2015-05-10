@@ -414,7 +414,6 @@ public class MainActivity extends ActionBarActivity
         }
         else if(id == R.id.action_add)  {
             Intent intent = new Intent(this, CreateEventActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
             startActivity(intent);
         }
         else if(id == R.id.action_augmented_reality_today)  {
