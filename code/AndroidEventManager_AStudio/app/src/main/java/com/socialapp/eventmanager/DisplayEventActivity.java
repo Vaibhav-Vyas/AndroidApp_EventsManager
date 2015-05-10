@@ -1,5 +1,6 @@
 package com.socialapp.eventmanager;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -51,7 +52,7 @@ import java.util.Random;
 import java.util.Set;
 
 
-public class DisplayEventActivity extends ActionBarActivity {
+public class DisplayEventActivity extends Activity {
 
     Event event;
 

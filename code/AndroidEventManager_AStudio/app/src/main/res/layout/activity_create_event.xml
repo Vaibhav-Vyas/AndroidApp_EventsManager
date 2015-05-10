@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@drawable/background_createevent"
+    android:background="@drawable/create_event_background"
     tools:context=".com.socialapp.eventmanager.$MainFragment">
 
     <ScrollView
@@ -158,15 +158,14 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#aaaaaa"
             android:id="@+id/bottomLayout1">
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight=".50"
                 android:text="Create Event"
+                android:textColor="#ffffff"
                 android:id="@+id/create_event_button"
-                android:textStyle="bold"
                 android:gravity="center"
                 android:layout_gravity="center"
                 android:padding="10dp"
@@ -184,8 +183,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight=".50"
                 android:text="Cancel"
+                android:textColor="#ffffff"
                 android:id="@+id/cancelEvent"
-                android:textStyle="bold"
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:padding="10dp"

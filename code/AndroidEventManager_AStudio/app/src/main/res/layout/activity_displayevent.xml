@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     tools:context="com.socialapp.eventmanager.DisplayEventActivity"
     android:orientation="vertical"
-    android:background="@drawable/background_displayevent">
+    android:background="#E1E1F1">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -21,7 +21,7 @@
                 android:id="@+id/headingLayout">
                 <ImageView
                     android:layout_width="match_parent"
-                    android:layout_height="180dp"
+                    android:layout_height="220dp"
                     android:id="@+id/eventImage"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentLeft="true"
@@ -351,15 +351,14 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#aaaaaa"
             android:id="@+id/bottomLayout1">
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight=".50"
+                android:textColor="#ffffff"
                 android:text="Edit"
                 android:id="@+id/editEvent"
-                android:textStyle="bold"
                 android:gravity="center"
                 android:layout_gravity="center"
                 android:padding="10dp"
@@ -376,8 +375,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight=".50"
                 android:text="Delete"
+                android:textColor="#ffffff"
                 android:id="@+id/deleteEvent"
-                android:textStyle="bold"
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:padding="10dp"
@@ -388,7 +387,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#aaaaaa"
             android:id="@+id/bottomLayout2"
             android:visibility="visible">
             <TextView
@@ -396,8 +394,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight=".33"
                 android:text="Accept"
+                android:textColor="#ffffff"
                 android:id="@+id/accept"
-                android:textStyle="bold"
                 android:gravity="center"
                 android:layout_gravity="center"
                 android:onClick="onClick"
@@ -415,8 +413,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight=".33"
                 android:text="Decline"
+                android:textColor="#ffffff"
                 android:id="@+id/decline"
-                android:textStyle="bold"
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:onClick="onClick"
@@ -434,8 +432,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight=".33"
                 android:text="May be"
+                android:textColor="#ffffff"
                 android:id="@+id/maybe"
-                android:textStyle="bold"
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:onClick="onClick"
