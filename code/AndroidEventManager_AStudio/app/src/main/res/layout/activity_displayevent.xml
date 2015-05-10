@@ -30,7 +30,7 @@
                     android:scaleType="centerCrop"/>
                 <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="180dp"
+                    android:layout_height="220dp"
                     android:background="@drawable/image_gradient"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentLeft="true"
@@ -160,7 +160,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/hostedByLayout"
                 android:layout_below="@+id/view2"
-                android:visibility="visible">
+                android:visibility="gone">
                 <ImageView
                     android:layout_width="30dp"
                     android:layout_height="30dp"
@@ -240,13 +240,14 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="10dp"
-                    android:id="@+id/statusLinearLayout">
+                    android:padding="5dp"
+                    android:id="@+id/statusLinearLayout"
+                    android:layout_marginTop="10dp">
                     <RelativeLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.25"
-                        android:layout_margin="5dp"
+                        android:layout_margin="0dp"
                         android:id="@+id/accepted"
                         android:onClick="onStatusClicked">
                         <TextView
@@ -254,20 +255,24 @@
                             android:layout_height="wrap_content"
                             android:text="0"
                             android:id="@+id/acceptCount"
-                            android:layout_centerHorizontal="true" />
+                            android:layout_centerHorizontal="true"
+                            android:textSize="18dp"
+                            android:textColor="#3B5998" />
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="accepted"
                             android:layout_below="@+id/acceptCount"
-                            android:layout_centerHorizontal="true" />
+                            android:layout_centerHorizontal="true"
+                            android:textSize="18dp"
+                            android:textColor="#3B5998" />
                     </RelativeLayout>
                     <RelativeLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.25"
                         android:gravity="center"
-                        android:layout_margin="5dp"
+                        android:layout_margin="0dp"
                         android:id="@+id/maybed"
                         android:onClick="onStatusClicked">
                         <TextView
@@ -275,20 +280,24 @@
                             android:layout_height="wrap_content"
                             android:text="0"
                             android:id="@+id/maybeCount"
-                            android:layout_centerHorizontal="true" />
+                            android:layout_centerHorizontal="true"
+                            android:textSize="18dp"
+                            android:textColor="#3B5998" />
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="maybe"
                             android:layout_below="@+id/maybeCount"
-                            android:layout_centerHorizontal="true" />
+                            android:layout_centerHorizontal="true"
+                            android:textSize="18dp"
+                            android:textColor="#3B5998" />
                     </RelativeLayout>
                     <RelativeLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.25"
                         android:gravity="center"
-                        android:layout_margin="5dp"
+                        android:layout_margin="0dp"
                         android:id="@+id/invited"
                         android:onClick="onStatusClicked">
                         <TextView
@@ -296,20 +305,24 @@
                             android:layout_height="wrap_content"
                             android:text="0"
                             android:id="@+id/invitedCount"
-                            android:layout_centerHorizontal="true" />
+                            android:layout_centerHorizontal="true"
+                            android:textSize="18dp"
+                            android:textColor="#3B5998" />
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="invited"
                             android:layout_below="@+id/invitedCount"
-                            android:layout_centerHorizontal="true" />
+                            android:layout_centerHorizontal="true"
+                            android:textSize="18dp"
+                            android:textColor="#3B5998" />
                     </RelativeLayout>
                     <RelativeLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.25"
                         android:gravity="center"
-                        android:layout_margin="5dp"
+                        android:layout_margin="0dp"
                         android:id="@+id/declined"
                         android:onClick="onStatusClicked">
                         <TextView
@@ -317,17 +330,21 @@
                             android:layout_height="wrap_content"
                             android:text="0"
                             android:id="@+id/declinedCount"
-                            android:layout_centerHorizontal="true" />
+                            android:layout_centerHorizontal="true"
+                            android:textSize="18dp"
+                            android:textColor="#3B5998" />
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="declined"
                             android:layout_below="@+id/declinedCount"
-                            android:layout_centerHorizontal="true" />
+                            android:layout_centerHorizontal="true"
+                            android:textSize="18dp"
+                            android:textColor="#3B5998" />
                     </RelativeLayout>
                 </LinearLayout>
 
-                <RelativeLayout
+                <!--<RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/statusLinearLayout"
@@ -338,7 +355,7 @@
                         android:text="Invite Friends"
                         android:id="@+id/addFriendsButton"
                         android:onClick="add_friends"/>
-                </RelativeLayout>
+                </RelativeLayout>-->
             </RelativeLayout>
 
         </RelativeLayout>
@@ -352,10 +369,30 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/bottomLayout1">
+
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight=".50"
+                android:layout_weight=".33"
+                android:textColor="#ffffff"
+                android:text="Invite"
+                android:id="@+id/addFriendsButton"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:padding="10dp"
+                android:textSize="20dp"
+                android:onClick="add_friends"
+                android:background="@drawable/text_button_states"/>
+            <View
+                android:layout_width="1dp"
+                android:layout_height="45dp"
+                android:layout_below="@+id/editEvent"
+                android:background="#626262"
+                android:layout_centerInParent="true" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".33"
                 android:textColor="#ffffff"
                 android:text="Edit"
                 android:id="@+id/editEvent"
@@ -373,7 +410,7 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight=".50"
+                android:layout_weight=".33"
                 android:text="Delete"
                 android:textColor="#ffffff"
                 android:id="@+id/deleteEvent"
