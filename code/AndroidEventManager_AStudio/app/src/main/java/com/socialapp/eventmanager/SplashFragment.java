@@ -188,16 +188,6 @@ public class SplashFragment extends Fragment {
             }
         });
 
-        skipLoginButton = (TextView) view.findViewById(R.id.skip_login_button);
-        skipLoginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (skipLoginCallback != null) {
-                    skipLoginCallback.onSkipLoginPressed();
-                }
-            }
-        });
-
         return view;
     }
 
