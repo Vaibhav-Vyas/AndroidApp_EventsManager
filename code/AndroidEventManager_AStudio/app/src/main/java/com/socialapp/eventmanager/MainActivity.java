@@ -67,7 +67,7 @@ public class MainActivity extends ActionBarActivity
     private ViewPager viewPager;
     private TabsPagerAdapter mAdapter;
     private ActionBar actionBar;
-    private String[] tabs = { "Today", "This Week", "This Month", "Later" };
+    private String[] tabs = { "Today", "This Week", "This Month", "All" };
 
     private static final String TAG = "Sujith";
 

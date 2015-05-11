@@ -118,7 +118,7 @@ public class GcmIntentService extends IntentService {
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
-                        .setSmallIcon(R.drawable.plus)   //TODO: change this icon
+                        .setSmallIcon(R.drawable.app_icon)   //TODO: change this icon
                         .setContentTitle(invitedBy + " updated event " + eventName)
                         .setStyle(new NotificationCompat.BigTextStyle()
                                 .bigText(eventId))
@@ -159,7 +159,7 @@ public class GcmIntentService extends IntentService {
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
-                        .setSmallIcon(R.drawable.plus)   //TODO: change this icon
+                        .setSmallIcon(R.drawable.app_icon)   //TODO: change this icon
                         .setContentTitle(invitedBy + " invited you to " + eventName)
                         .setStyle(new NotificationCompat.BigTextStyle()
                                 .bigText(eventId))
@@ -203,7 +203,7 @@ public class GcmIntentService extends IntentService {
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
-                        .setSmallIcon(R.drawable.plus)   //TODO: change this icon
+                        .setSmallIcon(R.drawable.app_icon)   //TODO: change this icon
                         .setContentTitle(user + " " + response + " your event")
                         .setStyle(new NotificationCompat.BigTextStyle()
                                 .bigText(eventId))
@@ -239,7 +239,7 @@ public class GcmIntentService extends IntentService {
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
-                        .setSmallIcon(R.drawable.plus)   //TODO: change this icon
+                        .setSmallIcon(R.drawable.app_icon)   //TODO: change this icon
                         .setContentTitle(invitedBy + " invited you to " + eventName)
                         .setStyle(new NotificationCompat.BigTextStyle()
                                 .bigText(eventId))
