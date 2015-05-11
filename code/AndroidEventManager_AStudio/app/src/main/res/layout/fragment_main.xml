@@ -3,7 +3,7 @@
     android:layout_height="match_parent"
     android:id="@+id/main_fragment_relative_layout"
     tools:context=".MainActivity$MainFragment"
-    android:background="@drawable/main_back">
+    android:background="#E9EAED">
 
     <ListView android:id="@+id/event_list"
         android:layout_width="match_parent"
