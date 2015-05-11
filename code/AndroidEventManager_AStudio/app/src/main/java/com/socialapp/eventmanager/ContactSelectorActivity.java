@@ -2,6 +2,7 @@ package com.socialapp.eventmanager;
 
 import android.app.Activity;
 import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.app.ActionBarActivity;
@@ -10,6 +11,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
@@ -17,6 +19,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.QuickContactBadge;
 import android.widget.RelativeLayout;
+import android.support.v7.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,15 +35,12 @@ public class ContactSelectorActivity extends ActionBarActivity {
     private boolean bLoadPhoneContacts;
     private boolean bLoadFBContacts;
 
-    EditText mEdit;
     String mSearchTerm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contacts_retriever);
-        mEdit = (EditText) findViewById(R.id.searchBoxInput);
-
 
         phoneContacts = (CheckBox)findViewById(R.id.showPhoneContactsChkBox);
         phoneContacts.setSelected(true);
@@ -56,7 +56,7 @@ public class ContactSelectorActivity extends ActionBarActivity {
                 else {
                     bLoadPhoneContacts = false;
                 }
-                searchContactsInfo(v, true);
+                searchContactsInfo("", v, true);
             }
         });
 
@@ -74,50 +74,46 @@ public class ContactSelectorActivity extends ActionBarActivity {
                 } else {
                     bLoadFBContacts = false;
                 }
-                searchContactsInfo(v, true);
-            }
-        });
-
-        mEdit.addTextChangedListener(new TextWatcher() {
-            public void afterTextChanged(Editable s) {
-
-            }
-
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-                // adding this check to reduce the number of queries.
-                if (s.length() >= 3) {
-                    View view = getWindow().getDecorView();
-                    searchContactsInfo(view, false);
-                }
-
+                searchContactsInfo("", v, true);
             }
         });
         View view = getWindow().getDecorView();
-        searchContactsInfo(view, true);
+        searchContactsInfo("", view, true);
     }
 
-    public void searchContactsInfo(View view){
-        // adding this check to reduce the number of queries.
-        if (mEdit.getText().length() >= 3 ) {
-            searchContactsInfo(view, false);
+    @Override
+    protected void onNewIntent(Intent intent) {
+        handleIntent(intent);
+    }
+
+    private void handleIntent(Intent intent) {
+
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            String query = intent.getStringExtra(SearchManager.QUERY);
+            if (query.length() >= 3) {
+                View view = getWindow().getDecorView();
+                searchContactsInfo(query, view, false);
+            }
         }
     }
 
     public void returnContactsInfo(View view){
         Intent i = getIntent();
+        String emails = ((EditText)findViewById(R.id.manualEmails)).getText().toString();
+        if(emails.length() > 0) {
+            String[] emailsArray = emails.split(",");
+            for(String email : emailsArray)
+            {
+                ContactsRetriever.invitedContactsMap.put(email, email);
+            }
+        }
         i.putExtra("contactsSelected", ContactsRetriever.invitedContactsMap);
         setResult(RESULT_OK, i);
         finish();
     }
 
-    public void searchContactsInfo(View viewTemp, boolean firstRunOnCreate)
+    public void searchContactsInfo(String query, View viewTemp, boolean firstRunOnCreate)
         {
-        String query =  mEdit.getText().toString();   // intent.getStringExtra(SearchManager.QUERY);
-
         String newFilter = !(query.isEmpty()) ? query : null;
 
         if ( !firstRunOnCreate) {
@@ -168,13 +164,6 @@ public class ContactSelectorActivity extends ActionBarActivity {
                 // Add new view objects
                 View phoneContactView = (RelativeLayout) ((Activity) getApplicationContext()).getLayoutInflater().inflate(R.layout.phone_contact_item, null);
 
-                Random rnd = new Random();
-                int transparency = 60;
-                int color = Color.argb(transparency, rnd.nextInt(58), rnd.nextInt(87), rnd.nextInt(149));
-
-                View viewBackground = (RelativeLayout) phoneContactView.findViewById(R.id.phoneContactEntry);
-                viewBackground.setBackgroundColor(color);
-
                 TextView contactName = (TextView) phoneContactView.findViewById(R.id.contactName);
                 contactName.setText(fbUserName);
 
@@ -214,8 +203,33 @@ public class ContactSelectorActivity extends ActionBarActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_contact_selector, menu);
+
+        // Associate searchable configuration with the SearchView
+        SearchManager searchManager =
+                (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView =
+                (SearchView) menu.findItem(R.id.search_contact).getActionView();
+        searchView.setSearchableInfo(
+                searchManager.getSearchableInfo(getComponentName()));
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            public boolean onQueryTextSubmit(String var1)
+            {
+                View view = getWindow().getDecorView();
+                searchContactsInfo(var1, view, false);
+                return false;
+            }
+            public boolean onQueryTextChange(String var1)
+            {
+                if(var1.length() > 3) {
+                    View view = getWindow().getDecorView();
+                    searchContactsInfo(var1, view, false);
+
+                }
+                return false;
+            }
+        });
         return true;
     }
 
@@ -227,7 +241,7 @@ public class ContactSelectorActivity extends ActionBarActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.search_contact) {
             return true;
         }
 

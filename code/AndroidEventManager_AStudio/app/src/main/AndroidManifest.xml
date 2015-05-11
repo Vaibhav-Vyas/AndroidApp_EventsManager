@@ -84,7 +84,14 @@
         </activity>
         <activity
             android:name=".ContactSelectorActivity"
-            android:label="@string/title_activity_contact_selector" >
+            android:label="@string/title_activity_contact_selector"
+            android:launchMode="singleTop">
+            <meta-data android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
         </activity>
 
         <activity

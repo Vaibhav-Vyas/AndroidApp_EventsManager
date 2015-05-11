@@ -4,69 +4,65 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background_main">
-<EditText
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:id="@+id/searchBoxInput"/>
+    android:background="#E1E1F1">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        >
-        <Button
-            android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <EditText
+            android:id="@+id/manualEmails"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:onClick="searchContactsInfo"
-            android:id="@+id/searchContacts"
-            android:text="Show contacts" />
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="returnContactsInfo"
-            android:id="@+id/returnContacts"
-            android:text="Done"
-            android:layout_alignParentRight="true"/>
+            android:hint="Manually add emails"
+            android:inputType="textCapSentences|textMultiLine"
+            android:maxLines="4"
+            android:minLines="1"
+            android:layout_weight="1"
+            android:textSize="20dp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
 
         <CheckBox
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="FB Contacts"
             android:id="@+id/showFBContactsChkBox"
-            android:layout_alignParentTop="true"
-            android:layout_toRightOf="@+id/searchContacts"
-            android:layout_toEndOf="@+id/searchContacts"
-            android:checked="true"/>
+            android:checked="true"
+            android:layout_centerVertical="true" />
 
         <CheckBox
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Phone Contacts"
             android:id="@+id/showPhoneContactsChkBox"
-            android:layout_below="@+id/showFBContactsChkBox"
-            android:layout_toRightOf="@+id/searchContacts"
-            android:layout_toEndOf="@+id/searchContacts"
-            android:checked="true"/>
+            android:checked="true"
+            android:layout_toRightOf="@+id/showFBContactsChkBox"
+            android:layout_centerVertical="true" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="returnContactsInfo"
+            android:id="@+id/returnContacts"
+            android:text="Done"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
     </RelativeLayout>
 
-
-<TextView android:id="@+id/sample_output"
-        android:text="@string/intro_message"
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:fontFamily="sans-serif"
-        />
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:id="@+id/contactsSelector">
-
-    </LinearLayout>
-</ScrollView>
+        android:layout_height="wrap_content">
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:id="@+id/contactsSelector"
+            android:dividerPadding="2px">
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>

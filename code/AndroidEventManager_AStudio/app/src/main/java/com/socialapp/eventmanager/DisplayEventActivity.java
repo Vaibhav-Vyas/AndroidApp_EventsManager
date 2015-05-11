@@ -464,6 +464,7 @@ public class DisplayEventActivity extends Activity {
         // Cleanup Selected Contacts state.
         ContactsRetriever.invitedContactsMap.clear();
         Intent intent = new Intent(this, ContactSelectorActivity.class);
+        intent.setAction(Intent.ACTION_SEARCH);
         startActivityForResult(intent, CONTACT_SELECT_REQUEST);
     }
 
