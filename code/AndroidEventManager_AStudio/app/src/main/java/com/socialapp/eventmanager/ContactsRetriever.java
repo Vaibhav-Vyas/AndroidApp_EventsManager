@@ -109,14 +109,7 @@ public class ContactsRetriever implements LoaderManager.LoaderCallbacks<Cursor> 
 
     @Override
     public void onLoadFinished(Loader<Cursor> arg0, Cursor cursor) {
-        TextView tv  = (TextView) ((Activity)mContext).findViewById(R.id.sample_output);
-        if(tv == null) {
-            Log.e(TAG, "TextView is null?!");
-        } else if (mContext == null) {
-            Log.e(TAG, "Context is null?");
-        } else {
-            Log.e(TAG, "Nothing is null?!");
-        }
+
 
         // Reset text in case of a previous query
         //tv.setText(mContext.getText(R.string.intro_message) + "\n\n");
