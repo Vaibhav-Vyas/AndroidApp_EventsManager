@@ -80,6 +80,7 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity
             android:name=".DisplayEventActivity"
+            android:launchMode="singleTop"
             android:label="@string/title_activity_display_event" >
         </activity>
         <activity
