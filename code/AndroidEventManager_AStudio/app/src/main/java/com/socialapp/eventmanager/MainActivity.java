@@ -428,8 +428,8 @@ public class MainActivity extends ActionBarActivity
             DrawSurfaceView.props.add(new Point(-33.870932d, 150.8000, "West"));
 
             // Followed by which we need to add the event co-ordinates
-            DrawSurfaceView.props.add(new Point(40.072107, -80.408114, "Union South"));
-            DrawSurfaceView.props.add(new Point(48.071676, -110.404633, "CS"));
+            DrawSurfaceView.props.add(new Point(43.076371, -89.432131, "UW-Hosp"));
+            DrawSurfaceView.props.add(new Point(43.139289, -89.336451, "Airport"));
 
             startActivity(intent);
         }
