@@ -241,14 +241,14 @@ public class DisplayEventActivity extends Activity {
         tv.setText(date + "    " + time);
 
         ImageView iv = (ImageView) findViewById(R.id.eventImage);
-        if(event.image_url != null && event.image_url.equals("")) {
+        if(event.image_url != null && !event.image_url.equals("")) {
             Log.d(TAG, "Showing image :" + event.image_url);
             iv.setImageBitmap(BitmapFactory.decodeFile(event.image_url));
             Log.d(TAG, "Image showed");
         }
 
         RelativeLayout detailsLayout = (RelativeLayout)findViewById(R.id.descriptionLayout);
-        if(event.description != null && event.description != "")
+        if(event.description != null && !event.description.equals(""))
         {
             tv = (TextView)findViewById(R.id.eventDetails);
             tv.setText(event.description);
