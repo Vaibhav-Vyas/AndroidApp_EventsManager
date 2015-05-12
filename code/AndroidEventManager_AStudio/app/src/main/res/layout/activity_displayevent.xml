@@ -370,7 +370,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/bottomLayout1">
 
-            <TextView
+            <Button
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight=".33"
@@ -389,7 +389,7 @@
                 android:layout_below="@+id/editEvent"
                 android:background="#626262"
                 android:layout_centerInParent="true" />
-            <TextView
+            <Button
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight=".33"
@@ -408,7 +408,7 @@
                 android:layout_below="@+id/editEvent"
                 android:background="#626262"
                 android:layout_centerInParent="true" />
-            <TextView
+            <Button
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight=".33"
@@ -428,7 +428,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/bottomLayout2"
             android:visibility="visible">
-            <TextView
+            <Button
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight=".33"
@@ -447,7 +447,7 @@
                 android:layout_below="@+id/editEvent"
                 android:background="#626262"
                 android:layout_centerInParent="true" />
-            <TextView
+            <Button
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight=".33"
@@ -466,7 +466,7 @@
                 android:layout_below="@+id/editEvent"
                 android:background="#626262"
                 android:layout_centerInParent="true" />
-            <TextView
+            <Button
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight=".33"
