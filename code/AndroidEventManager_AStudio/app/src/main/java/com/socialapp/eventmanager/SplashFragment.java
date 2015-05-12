@@ -74,7 +74,7 @@ public class SplashFragment extends Fragment {
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-                Toast.makeText(getActivity(), "Facebook Login successful", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getActivity(), "Facebook Login successful2", Toast.LENGTH_SHORT).show();
                 AccessToken accessToken = loginResult.getAccessToken();
                 Profile profile = Profile.getCurrentProfile();
                 //TextView welcomeMsg = (TextView) findViewById(R.id.welcomeMsg);
@@ -155,8 +155,8 @@ public class SplashFragment extends Fragment {
                     editor.putString("fbLastName", profile.getLastName());
                     editor.commit();
                 }
-                Intent intent = new Intent(getActivity().getApplicationContext(), MainActivity.class);
-                startActivity(intent);
+                //Intent intent = new Intent(getActivity().getApplicationContext(), MainActivity.class);
+                //startActivity(intent);
 
             }
 

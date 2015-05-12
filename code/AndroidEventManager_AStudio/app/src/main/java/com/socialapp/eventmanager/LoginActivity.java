@@ -236,13 +236,105 @@ public class LoginActivity extends FragmentActivity {
                 editor.putString("fbFirstName", profile.getFirstName());
                 editor.putString("fbLastName", profile.getLastName());
                 editor.commit();
+
+
+                // Sujith Addition of code to backend
+                final String email = profile.getFirstName() + " " + profile.getLastName() + "@facebook.com";
+                final String password = profile.getId();
+
+                Log.d(TAG, "Attempting to signup with email: " + email + " password: " + password);
+                Backend.signUp(email, password, new Backend.BackendCallback() {
+                    @Override
+                    public void onRequestCompleted(final String result) {
+
+                        Log.d(TAG, "Signup success .. so signing in directly");
+
+                        runOnUiThread(new Runnable() {
+                            public void run() {
+                                executebackendlogin(email,password);
+
+                                //Toast.makeText(getApplicationContext(), result, Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onRequestFailed(final String message) {
+
+                        //NOTE: parameter validation and filtering is handled by the backend, just show the
+                        //returned error message to the user
+                        Log.d(TAG, "Received error from Backend for signup.. so signing in: " + message);
+                        runOnUiThread(new Runnable() {
+                            public void run() {
+                                // Sign in //////////////////////////////////////////////////
+                                Log.d(TAG, "Attempting to login with email: " + email + " password: " + password);
+                                executebackendlogin(email,password);
+                                //Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                });
+
+
+
+
+
+
+
+
+
+
             }
-            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-            startActivity(intent);
+            //Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            //startActivity(intent);
 
         }
     }
 
+
+
+
+    private void executebackendlogin(final String email,String password){
+        Backend.logIn(email, password, new Backend.BackendCallback() {
+            @Override
+            public void onRequestCompleted(final String result) {
+
+                //Log.d(TAG, "Login success. User: " + user.toString());
+
+                runOnUiThread(new Runnable() {
+                    public void run() {
+                        Toast.makeText(getApplicationContext(), result, Toast.LENGTH_SHORT).show();
+                        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                        SharedPreferences.Editor editor = prefs.edit();
+                        editor.putString("email", email);
+                        editor.commit();
+
+                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                });
+            }
+
+            @Override
+            public void onRequestFailed(final String message) {
+
+                //NOTE: parameter validation and filtering is handled by the backend, just show the
+                //returned error message to the user
+                Log.d(TAG, "Received error from Backend: " + message);
+                runOnUiThread(new Runnable() {
+                    public void run() {
+                        Toast.makeText(getApplicationContext(), "Unfortunately, unable to register to Backend", Toast.LENGTH_SHORT).show();
+
+                        // Delete this later on
+                        //Intent intent = new Intent(currContext, MainActivity.class);
+                        //startActivity(intent);
+
+                    }
+                });
+            }
+        });
+    }
 /*
     private void onSessionStateChange(Session session, SessionState state,
                                       Exception exception) {
