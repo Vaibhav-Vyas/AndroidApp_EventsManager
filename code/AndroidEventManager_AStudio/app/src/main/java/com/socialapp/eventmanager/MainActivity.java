@@ -52,6 +52,7 @@ import android.widget.Toast;
 import com.cobyplain.augmentreality.DrawSurfaceView;
 import com.cobyplain.augmentreality.Point;
 import com.cobyplain.augmentreality.Compass;
+import com.facebook.login.LoginManager;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
@@ -466,6 +467,8 @@ public class MainActivity extends ActionBarActivity
         }
         else if(id == R.id.action_logout)
         {
+            callFacebookLogout(getApplicationContext());
+
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
             SharedPreferences.Editor editor = prefs.edit();
             editor.clear();
@@ -475,4 +478,12 @@ public class MainActivity extends ActionBarActivity
         }
         return super.onOptionsItemSelected(item);
     }
+
+    /**
+     * Logout From Facebook
+     */
+    public static void callFacebookLogout(Context context) {
+        LoginManager.getInstance().logOut();
+    }
+
 }
