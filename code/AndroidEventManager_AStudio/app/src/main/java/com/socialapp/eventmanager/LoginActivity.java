@@ -44,6 +44,7 @@ import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
 import com.facebook.GraphRequestBatch;
 import com.facebook.GraphResponse;
+import com.facebook.Profile;
 import com.facebook.appevents.AppEventsLogger;
 import com.facebook.CallbackManager;
 import com.socialapp.eventmanager.Models.User;
@@ -110,40 +111,7 @@ public class LoginActivity extends FragmentActivity {
             protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken,
                                                        AccessToken currentAccessToken) {
 
-
-                JSONArray friendsIDarray = new JSONArray();
-                JSONObject user_friend_list;
-
-                GraphRequestBatch batch = new GraphRequestBatch(
-                        GraphRequest.newMeRequest(
-                                currentAccessToken,
-                                new GraphRequest.GraphJSONObjectCallback() {
-                                    @Override
-                                    public void onCompleted(
-                                            JSONObject jsonObject,
-                                            GraphResponse response) {
-                                        Log.i("Info Msg:", "Response = ." + response.toString());
-                                    }
-                                }),
-                        GraphRequest.newMyFriendsRequest(
-                                currentAccessToken,
-                                new GraphRequest.GraphJSONArrayCallback() {
-                                    @Override
-                                    public void onCompleted(
-                                            JSONArray jsonArray,
-                                            GraphResponse response) {
-                                        // Application code for users friends
-                                    }
-                                })
-                );
-                batch.addCallback(new GraphRequestBatch.Callback() {
-                    @Override
-                    public void onBatchCompleted(GraphRequestBatch graphRequests) {
-                        // Application code for when the batch finishes
-                    }
-                });
-                batch.executeAsync();
-
+                checkAndRedirectOnFBLogin();
 
                 if (isResumed) {
                     FragmentManager manager = getSupportFragmentManager();
@@ -154,7 +122,7 @@ public class LoginActivity extends FragmentActivity {
                     if (currentAccessToken != null) {
                         // showFragment(SELECTION, false);
                     } else {
-                        showFragment(SPLASH, false);
+                        showFragment(SPLASH, true);
                     }
                 }
             }
@@ -189,6 +157,89 @@ public class LoginActivity extends FragmentActivity {
         {
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
+        }
+    }
+
+    public void checkAndRedirectOnFBLogin()
+    {
+        if (AccessToken.getCurrentAccessToken() != null) {
+            // if the user already logged in, try to show the selection fragment
+            Toast.makeText(getApplicationContext(), "Facebook Login successful", Toast.LENGTH_SHORT).show();
+            AccessToken accessToken = AccessToken.getCurrentAccessToken();
+            Profile profile = Profile.getCurrentProfile();
+
+            // Using Facebook API for getting User details as well as
+            // friends that are using this app.
+            JSONArray friendsIDarray = new JSONArray();
+            JSONObject user_friend_list;
+
+            GraphRequestBatch batch = new GraphRequestBatch(
+                    GraphRequest.newMeRequest(
+                            accessToken,
+                            new GraphRequest.GraphJSONObjectCallback() {
+                                @Override
+                                public void onCompleted(
+                                        JSONObject jsonObject,
+                                        GraphResponse response) {
+                                    Log.i("Info Msg:", "Response = ." + response.toString());
+
+                                    try {
+                                        Log.i("Info Msg:", "Logged in Users FB id = ." + jsonObject.getString("id"));
+                                        Log.i("Info Msg:", "Logged in Users FB name = ." + jsonObject.getString("name"));
+                                        SplashFragment.friendsUsingApp.put(jsonObject.getString("id"),
+                                                jsonObject.getString("name"));
+                                    }
+                                    catch (Exception e)
+                                    {
+                                    }
+                                }
+                            }),
+                    // FB API for getting users friends that are using this app.
+                    GraphRequest.newMyFriendsRequest(
+                            accessToken,
+                            new GraphRequest.GraphJSONArrayCallback() {
+                                @Override
+                                public void onCompleted(
+                                        JSONArray jsonArray,
+                                        GraphResponse response) {
+
+                                    try {
+                                       SplashFragment.friendsUsingApp.clear();
+                                        for (int i = 0; i < jsonArray.length(); i++) {
+                                            Log.i("Info Msg:", "id = ." + jsonArray.getJSONObject(i).getString("id"));
+                                            Log.i("Info Msg:", "name = ." + jsonArray.getJSONObject(i).getString("name"));
+                                            SplashFragment.friendsUsingApp.put(jsonArray.getJSONObject(i).getString("id"),
+                                                    jsonArray.getJSONObject(i).getString("name"));
+                                        }
+
+                                        Log.i("Info Msg:", "Response = ." + response.toString());
+                                    }
+                                    catch (Exception e)
+                                    {
+
+                                    }
+                                }
+                            })
+            );
+            batch.addCallback(new GraphRequestBatch.Callback() {
+                @Override
+                public void onBatchCompleted(GraphRequestBatch graphRequests) {
+                    // Application code for when the batch finishes
+                }
+            });
+            batch.executeAsync();
+
+            if (null != profile) {
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                SharedPreferences.Editor editor = prefs.edit();
+                //editor.putString("id", profile.getId());
+                editor.putString("fbFirstName", profile.getFirstName());
+                editor.putString("fbLastName", profile.getLastName());
+                editor.commit();
+            }
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(intent);
+
         }
     }
 
@@ -388,7 +439,7 @@ public class LoginActivity extends FragmentActivity {
         } else {
             // otherwise present the splash screen and ask the user to login,
             // unless the user explicitly skipped.
-            showFragment(SPLASH, false);
+            showFragment(SPLASH, true);
         }
     }
 

@@ -108,23 +108,6 @@ public class SplashFragment extends Fragment {
                                         catch (Exception e)
                                         {
                                         }
-/*
-                                        if (response) {
-                                            // handle the result
-                                            Log.i("Info Msg:", "Response = ." + response.toString());
-
-
-                                            for(int i=0; i<response.getJSONArray().length(); i++)
-                                            {
-
-                                                JSONObject data = response.getJSONObject(i);
-                                                friendsIDarray.push(data[i].id);
-                                            }
-                                            user_friend_list = friendsIDarray.join();
-
-                                        }
-*/
-                                       
                                     }
                                 }),
                         // FB API for getting users friends that are using this app.
