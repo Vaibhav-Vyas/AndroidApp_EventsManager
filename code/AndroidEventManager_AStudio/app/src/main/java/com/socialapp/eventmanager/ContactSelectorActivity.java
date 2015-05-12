@@ -162,7 +162,7 @@ public class ContactSelectorActivity extends ActionBarActivity {
                 fbUserName = SplashFragment.friendsUsingApp.get(fbIdCurrFriend).toString();
 
                 // Add new view objects
-                View phoneContactView = (RelativeLayout) ((Activity) getApplicationContext()).getLayoutInflater().inflate(R.layout.phone_contact_item, null);
+                View phoneContactView = (RelativeLayout) getLayoutInflater().inflate(R.layout.phone_contact_item, null);
 
                 TextView contactName = (TextView) phoneContactView.findViewById(R.id.contactName);
                 contactName.setText(fbUserName);
