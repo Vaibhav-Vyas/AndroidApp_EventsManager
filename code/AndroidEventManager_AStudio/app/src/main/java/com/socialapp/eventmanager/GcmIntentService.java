@@ -34,6 +34,7 @@ public class GcmIntentService extends IntentService {
         // The getMessageType() intent parameter must be the intent you received
         // in your BroadcastReceiver.
         String messageType = gcm.getMessageType(intent);
+        Log.d("Sujith", "messagetype is :" + messageType);
 
         if (!extras.isEmpty()) {  // has effect of unparcelling Bundle
             /*
@@ -80,15 +81,19 @@ public class GcmIntentService extends IntentService {
         switch (type)
         {
             case "1":
+                Log.d("Sujith","Calling invited to event");
                 invitedToEvent(msg,type);
                 break;
             case "2":
+                Log.d("Sujith","Calling response from invitee");
                 responseFromInvitee(msg,type);
                 break;
             case "3": // edit
+                Log.d("Sujith","Calling updated event");
                 updatedEvent(msg,type);
                 break;
             case "4":
+                Log.d("Sujith","Calling deleted event");
                 deletedEvent(msg,type);
                 break;
         }
@@ -160,7 +165,7 @@ public class GcmIntentService extends IntentService {
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.drawable.app_icon)   //TODO: change this icon
-                        .setContentTitle(invitedBy + " invited you to " + eventName)
+                        .setContentTitle(invitedBy + " deleted the event " + eventName)
                         .setStyle(new NotificationCompat.BigTextStyle()
                                 .bigText(eventId))
                         .setContentText(eventId);

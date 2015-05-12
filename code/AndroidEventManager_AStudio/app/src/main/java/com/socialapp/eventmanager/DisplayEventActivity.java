@@ -84,7 +84,7 @@ public class DisplayEventActivity extends Activity {
                     @Override
                     public void onRequestCompleted(final String result) {
                         try {
-                            System.out.println("Result is : " + result);
+                            System.out.println("Result1 is : " + result);
                             JSONObject obj = new JSONObject(result);
                             event.owner = obj.getString("owner");
                             event.name = obj.getString("name");
@@ -114,7 +114,8 @@ public class DisplayEventActivity extends Activity {
                     public void onRequestFailed(final String message) {
                         runOnUiThread(new Runnable() {
                             public void run() {
-                                Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), "Unfortunately there is some issue in getting the event from server !", Toast.LENGTH_SHORT).show();
+                               // Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
                             }
                         });
                     }
@@ -176,7 +177,7 @@ public class DisplayEventActivity extends Activity {
                     @Override
                     public void onRequestCompleted(final String result) {
                         try {
-                            System.out.println("Result is : " + result);
+                            System.out.println("Result3 is : " + result);
                             JSONObject obj = new JSONObject(result);
                             event.owner = obj.getString("owner");
                             event.name = obj.getString("name");
@@ -186,7 +187,6 @@ public class DisplayEventActivity extends Activity {
                             event.start_time = Long.parseLong(obj.getString("startTime"));
                             event.end_time = Long.parseLong(obj.getString("endTime"));
                             event.organization = obj.getString("organization");
-                            event.status = "invited";
                             Log.d(TAG, "Image url: " + event.image_url);
                             if (event.image_url != "") {
                                 saveImageToGallery(event);
@@ -206,7 +206,8 @@ public class DisplayEventActivity extends Activity {
                     public void onRequestFailed(final String message) {
                         runOnUiThread(new Runnable() {
                             public void run() {
-                                Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), "Unfortunately there is some issue in getting the event from server !", Toast.LENGTH_SHORT).show();
+                               // Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
                             }
                         });
                     }
@@ -377,7 +378,8 @@ public class DisplayEventActivity extends Activity {
                     public void run() {
                         try {
                             //JSONObject obj = new JSONObject(result);
-                            Toast.makeText(getApplicationContext(), result, Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(getApplicationContext(), result, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "Event deleted successfully !", Toast.LENGTH_SHORT).show();
                             event.delete();
                             finish();
                             //if (event.image_url != null) {
@@ -398,7 +400,8 @@ public class DisplayEventActivity extends Activity {
                 Log.d(TAG, "Received error from Backend: " + message);
                 runOnUiThread(new Runnable() {
                     public void run() {
-                        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Unfortunately there is some issue in deleting event from server !", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -441,7 +444,8 @@ public class DisplayEventActivity extends Activity {
             public void onRequestCompleted(final String result) {
                 runOnUiThread(new Runnable() {
                     public void run() {
-                        Toast.makeText(getApplicationContext(), result, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Your response has been sent to the owner !", Toast.LENGTH_SHORT).show();
+                       // Toast.makeText(getApplicationContext(), result, Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -452,7 +456,8 @@ public class DisplayEventActivity extends Activity {
             public void onRequestFailed(final String message) {
                 runOnUiThread(new Runnable() {
                     public void run() {
-                        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Unfortunately there is some issue sending the response to owner !", Toast.LENGTH_SHORT).show();
+                      //  Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -498,14 +503,15 @@ public class DisplayEventActivity extends Activity {
             friends_to_invite_string = friends_to_invite_string.length() > 0 ?
                     friends_to_invite_string.substring(0,friends_to_invite_string.length()-1) : " ";
 
-            Toast.makeText(getApplicationContext(), "Invited friends email ID includes: " + friends_to_invite_string, Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getApplicationContext(), "Invited friends email ID includes: " + friends_to_invite_string, Toast.LENGTH_SHORT).show();
 
             Backend.InviteFriends(event, friends_to_invite_string, new Backend.BackendCallback() {
                 @Override
                 public void onRequestCompleted(final String result) {
                     runOnUiThread(new Runnable() {
                         public void run() {
-                            Toast.makeText(getApplicationContext(), result, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "Your friends have been invited !", Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(getApplicationContext(), result, Toast.LENGTH_SHORT).show();
                         }
                     });
                 }
@@ -514,7 +520,8 @@ public class DisplayEventActivity extends Activity {
                 public void onRequestFailed(final String message) {
                     runOnUiThread(new Runnable() {
                         public void run() {
-                            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "Unfortunately there is some issue in inviting your friends. Please check their email addresses !", Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
                         }
                     });
                 }
@@ -522,8 +529,8 @@ public class DisplayEventActivity extends Activity {
             // ==========
 
         } else {
-            Toast.makeText(this, "Invalid result or error code for ContactSelectorActivity",
-                    Toast.LENGTH_LONG).show();
+            //Toast.makeText(this, "Invalid result or error code for ContactSelectorActivity",
+                   // Toast.LENGTH_LONG).show();
         }
     }
 

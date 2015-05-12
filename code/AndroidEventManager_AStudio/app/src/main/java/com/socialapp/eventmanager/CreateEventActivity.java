@@ -257,7 +257,8 @@ public class CreateEventActivity extends FragmentActivity {
                                 event.event_id = obj.getString("eventId");
                                 event.save();
 
-                                Toast.makeText(getApplicationContext(), result, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), "Event created successfully !", Toast.LENGTH_SHORT).show();
+                               // Toast.makeText(getApplicationContext(), result, Toast.LENGTH_SHORT).show();
                                 if (event.image_url != null) {
                                     sendEventImageToBackend(event);
                                 }
@@ -285,7 +286,8 @@ public class CreateEventActivity extends FragmentActivity {
                     Log.d(TAG, "Received error from Backend: " + message);
                     runOnUiThread(new Runnable() {
                         public void run() {
-                            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "Error in creating event !", Toast.LENGTH_SHORT).show();
+                           // Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
                         }
                     });
                 }
@@ -302,7 +304,8 @@ public class CreateEventActivity extends FragmentActivity {
                                 //JSONObject obj = new JSONObject(result);
                                 event.save();
 
-                                Toast.makeText(getApplicationContext(), result, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), "Event updated successfully !", Toast.LENGTH_SHORT).show();
+                              //  Toast.makeText(getApplicationContext(), result, Toast.LENGTH_SHORT).show();
                                 if (event.image_url != null) {
                                     sendEventImageToBackend(event);
                                 }
@@ -330,7 +333,8 @@ public class CreateEventActivity extends FragmentActivity {
                     Log.d(TAG, "Received error from Backend: " + message);
                     runOnUiThread(new Runnable() {
                         public void run() {
-                            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "Error in updating the event !", Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
                         }
                     });
                 }
@@ -394,8 +398,8 @@ public class CreateEventActivity extends FragmentActivity {
                         Toast.LENGTH_LONG).show();
             }
         } catch (Exception e) {
-            Toast.makeText(this, "Something went wrong", Toast.LENGTH_LONG)
-                    .show();
+            //Toast.makeText(this, "Something went wrong", Toast.LENGTH_LONG)
+                //    .show();
         }
 
     }

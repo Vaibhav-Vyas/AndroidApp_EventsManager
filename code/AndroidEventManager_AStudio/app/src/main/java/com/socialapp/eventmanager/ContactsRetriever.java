@@ -222,12 +222,12 @@ public class ContactsRetriever implements LoaderManager.LoaderCallbacks<Cursor> 
                     if (checkBoxSelectContact.isChecked()) {
                         // if checked, then add to hashMap
                         invitedContactsMap.put(emailId, contactName);
-                        Toast.makeText((mContext), "Added emailID: " + emailId + ", Contact name = " + contactName + " to the invitee list", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText((mContext), "Added emailID: " + emailId + ", Contact name = " + contactName + " to the invitee list", Toast.LENGTH_SHORT).show();
 
                     } else {
                         // un-checked, then remove from hashMap
                         invitedContactsMap.remove(emailId);
-                        Toast.makeText((mContext), "Removed emailID: " + emailId + ", Contact name = " + contactName + " from the invitee list", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText((mContext), "Removed emailID: " + emailId + ", Contact name = " + contactName + " from the invitee list", Toast.LENGTH_SHORT).show();
                     }
                 }
             });
